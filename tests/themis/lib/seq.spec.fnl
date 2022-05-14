@@ -3,7 +3,7 @@
 (local {: empty?
         : first
         : second
-        : last} (require :fnl.themis.stdlib.seq))
+        : last} (require :fnl.themis.lib.seq))
 
 (deftest fn/empty?
   (testing "works properly with empty list"
