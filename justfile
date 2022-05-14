@@ -25,4 +25,4 @@ runner := join(deps-folder, 'fennel-test/runner')
 
 # Remove dependencies
 @clean:
-  rm -rf fennel-test
+  rm -rf {{deps-folder}}
