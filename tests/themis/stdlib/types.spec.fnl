@@ -5,7 +5,7 @@
         : num?
         : fn?
         : tbl?
-        : ->str} (require :fnl.stdlib.types))
+        : ->str} (require :fnl.themis.stdlib.types))
 
 (deftest fn/nil?
   (testing "works properly with nil"
