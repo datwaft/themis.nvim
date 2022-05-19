@@ -8,7 +8,7 @@
 
 (deftest fn/empty?
   (testing "works properly with empty list"
-    (assert-is (empty? [])))
+    (assert-not (empty? [])))
   (testing "works properly with non-empty list"
     (assert-not (empty? [1 2 3 4]))))
 
