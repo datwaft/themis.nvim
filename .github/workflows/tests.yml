@@ -9,10 +9,8 @@ jobs:
         uses: actions/checkout@v2
         with:
           submodules: recursive
-      - name: Setup LuaJIT
+      - name: Setup Lua
         uses: leafo/gh-actions-lua@v9
-        with:
-          luaVersion: "luajit-2.1.0-beta3"
       - name: Setup Just
         uses: extractions/setup-just@v1
       - name: Execute tests
