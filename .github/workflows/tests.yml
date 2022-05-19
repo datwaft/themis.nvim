@@ -12,6 +12,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         with:
+          lfs: "true"
           submodules: recursive
       - name: Setup Lua
         uses: leafo/gh-actions-lua@v9
