@@ -10,4 +10,6 @@
 *.sh text eol=lf
 # Set Github syntax for Justfiles to Makefiles
 justfile linguist-language=Makefile
+# Track fennel executable using LFS
+fennel filter=lfs diff=lfs merge=lfs -text
 deps/fennel-* filter=lfs diff=lfs merge=lfs -text
