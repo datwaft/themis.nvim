@@ -8,9 +8,9 @@
 
 (deftest fn/empty?
   (testing "works properly with empty list"
-    (assert-eq (empty? []) true))
+    (assert-is (empty? [])))
   (testing "works properly with non-empty list"
-    (assert-eq (empty? [1 2 3 4]) false)))
+    (assert-not (empty? [1 2 3 4]))))
 
 (deftest fn/first
   (testing "works properly with empty list"
