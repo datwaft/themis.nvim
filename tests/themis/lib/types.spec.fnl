@@ -1,4 +1,4 @@
-(require-macros :deps.fennel-test)
+(require-macros :fennel-test)
 
 (local {: nil?
         : str?

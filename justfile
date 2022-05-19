@@ -6,6 +6,8 @@ lua-binary := 'lua'
 fennel-options := trim(replace(replace("
   --no-compiler-sandbox
   --add-fennel-path 'fnl/?.fnl'
+  --add-fennel-path 'deps/?.fnl'
+  --add-macro-path 'deps/?/init-macros.fnl'
 ", "\n", ' '), '   ', ' '))
 runner := join(deps-folder, 'fennel-test/runner')
 
