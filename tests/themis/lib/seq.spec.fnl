@@ -3,7 +3,8 @@
 (local {: empty?
         : first
         : second
-        : last} (require :fnl.themis.lib.seq))
+        : last
+        : contains?} (require :fnl.themis.lib.seq))
 
 (deftest fn/empty?
   (testing "works properly with empty list"
@@ -40,3 +41,14 @@
     (assert-eq (last [1]) 1))
   (testing "works properly with two element list"
     (assert-eq (last [1 2]) 2)))
+
+(deftest fn/last
+  (testing "works properly with empty list"
+    (assert-not (contains? [] 1))
+    (assert-not (contains? [] "")))
+  (testing "works properly with a list of one element"
+    (assert-is (contains? [1] 1))
+    (assert-not (contains? ["Hello"] "World")))
+  (testing "works properly with a list of three elements"
+    (assert-is (contains? [1 2 3] 2))
+    (assert-not (contains? [1 2 3] 4))))

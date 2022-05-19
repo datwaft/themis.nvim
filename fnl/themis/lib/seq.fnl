@@ -10,7 +10,14 @@
 (lambda last [xs]
   (?. xs (length xs)))
 
+(lambda contains? [xs e]
+  (accumulate [contains? false
+               _ v (ipairs xs)
+               :until contains?]
+    (= v e)))
+
 {: empty?
  : first
  : second
- : last}
+ : last
+ : contains?}
