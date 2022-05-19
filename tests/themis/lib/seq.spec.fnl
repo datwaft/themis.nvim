@@ -4,7 +4,7 @@
         : first
         : second
         : last
-        : contains?} (require :fnl.themis.lib.seq))
+        : contains?} (require :themis.lib.seq))
 
 (deftest fn/empty?
   (testing "works properly with empty list"
