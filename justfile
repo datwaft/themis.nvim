@@ -1,6 +1,5 @@
 # use with https://github.com/casey/just
 
-deps-folder := 'deps'
 fennel-binary := 'fennel'
 lua-binary := 'lua'
 fennel-options := trim(replace(replace("
@@ -9,23 +8,20 @@ fennel-options := trim(replace(replace("
   --add-fennel-path 'deps/?.fnl'
   --add-macro-path 'deps/?/init-macros.fnl'
 ", "\n", ' '), '   ', ' '))
-runner := join(deps-folder, 'fennel-test/runner')
+runner := 'deps/fennel-test/runner'
 
 # Display list of commands
 @help:
   just --list
 
-# Ensure fennel-test dependency is installed
-@ensure-fennel-test:
-  if [ ! -d '{{deps-folder}}/fennel-test' ]; then \
-    git clone 'https://gitlab.com/andreyorst/fennel-test.git' \
-      '{{deps-folder}}/fennel-test'; \
-  fi
+# Ensure dependencies are installed
+@ensure:
+  git submodule update --init
+
+# Upgrade dependencies
+@upgrade:
+  git submodule update --remote
 
 # Execute test suites
-@test +files=`find tests/ -name '*.spec.fnl' | paste -sd ' '`: ensure-fennel-test
+@test +files=`find tests/ -name '*.spec.fnl' | paste -sd ' '`: ensure
   {{fennel-binary}} --lua {{lua-binary}} {{fennel-options}} {{runner}} {{files}}
-
-# Remove dependencies
-@clean:
-  rm -rf {{deps-folder}}
