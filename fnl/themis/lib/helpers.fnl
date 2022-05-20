@@ -2,9 +2,13 @@
 (local {: contains?} (require :themis.lib.seq))
 
 (fn get-key [name]
+  "Removes the `no` at the start of the name if it starts with a `no`."
+  (assert (str? name) "expected string for name")
   (or (name:match "^no(.+)$") name))
 
 (fn get-value [name]
+  "Checks whether the name starts with no, if it does return `false`, else `true`."
+  (assert (str? name) "expected string for name")
   (not (name:match "^no(.+)$")))
 
 (fn args->tbl [args options]
