@@ -1,12 +1,12 @@
 (require-macros :fennel-test)
+(import-macros {: expr->str} :themis.lib.compile-time)
 
-(import-macros {: expr->str
-                : fn?
+(import-macros {: fn?
                 : quoted?
                 : quoted->fn
                 : quoted->str} :themis.lib.compile-time)
 
-(deftest fn/expr->str
+(deftest macro/expr->str
   (testing "works properly with an addition expression"
     (assert-eq (expr->str (+ 1 2))
                "(+ 1 2)"))
@@ -50,7 +50,7 @@
   (testing "works properly with a non-quoted string"
     (assert-not (quoted? "something"))))
 
-(deftest fn/quoted->fn
+(deftest macro/quoted->fn
   (testing "works properly with a quoted expression"
     (assert-eq (expr->str (quoted->fn '(+ 1 2)))
                (expr->str (fn [] (+ 1 2)))))
