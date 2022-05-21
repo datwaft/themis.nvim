@@ -1,7 +1,7 @@
 (local {: first
         : second} (require :themis.lib.seq))
 
-(fn expr->str [expr]
+(lambda expr->str [expr]
   `(macrodebug ,expr nil))
 
 (fn fn? [x]
