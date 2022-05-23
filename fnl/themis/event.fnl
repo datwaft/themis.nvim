@@ -81,7 +81,7 @@
   (expand-exprs
     (let [name (->str name)]
       (icollect [_ expr (ipairs [...])
-                 :into [`(vim.api.nvim_create_augroup ,name {})]]
+                 :into [`(vim.api.nvim_create_augroup ,name {:clear false})]]
         (if (= 'autocmd! (first expr))
           (doto expr
             (table.insert :group)
