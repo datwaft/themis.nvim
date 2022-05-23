@@ -29,6 +29,12 @@
                 :group "something"
                 :buffer 0
                 :desc "this is the description"}))
+  (testing "works properly with no options"
+    (assert-eq (args->tbl [:buffer 1 "desc"])
+               {:buffer 1}))
+  (testing "works properly with only last option specified"
+    (assert-eq (args->tbl [:buffer 1 "desc"] {:last :desc})
+               {:buffer 1 :desc "desc"}))
   (testing "works properly with single boolean option"
     (assert-eq (args->tbl [:once]
                           {:booleans [:once]})

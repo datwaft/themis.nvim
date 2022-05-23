@@ -23,25 +23,24 @@
      :buffer 0
      :desc \"this is the description\"}"
   (assert (tbl? args) "expected table for args")
-  (assert (tbl? options) "expected table for options")
-  (assert (tbl? (?. options :booleans))) "expected options to have table for booleans"
-  (var {: booleans
-        : last} options)
-  (var output {})
-  (var to-process nil)
-  (each [i v (ipairs args)]
-    (if (nil? to-process)
-      (if
-        (and (str? v)
-             (contains? booleans (get-key v))) (tset output (get-key v) (get-value v))
-        (set to-process v))
-      (do
-        (tset output to-process v)
-        (set to-process nil))))
-  (when (and (not (nil? to-process))
-             (not (nil? last)))
-    (tset output last to-process))
-  output)
+  (let [options (or options {})
+        booleans (or options.booleans [])
+        last options.last]
+    (var output {})
+    (var to-process nil)
+    (each [i v (ipairs args)]
+      (if (nil? to-process)
+        (if
+          (and (str? v)
+               (contains? booleans (get-key v))) (tset output (get-key v) (get-value v))
+          (set to-process v))
+        (do
+          (tset output to-process v)
+          (set to-process nil))))
+    (when (and (not (nil? to-process))
+               (not (nil? last)))
+      (tset output last to-process))
+    output))
 
 {: get-key
  : get-value

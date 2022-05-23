@@ -2,7 +2,8 @@
 (import-macros {: expr->str} :themis.lib.compile-time)
 
 (import-macros {: autocmd!
-                : augroup!} :themis.event)
+                : augroup!
+                : clear!} :themis.event)
 
 (deftest macro/autocmd!
   (testing "works properly with the example"
@@ -118,4 +119,20 @@
                             (autocmd! Filetype *.py '(print "Hello World"))))
                (expr->str (do
                             (vim.api.nvim_create_augroup "a-nice-group" {})
+                            (autocmd! Filetype *.py '(print "Hello World") :group "a-nice-group")))))
+  (testing "works properly with a clear! statement"
+    (assert-eq (expr->str (augroup! a-nice-group
+                            (clear!)
+                            (autocmd! Filetype *.py '(print "Hello World"))))
+               (expr->str (do
+                            (vim.api.nvim_create_augroup "a-nice-group" {})
+                            (clear! "a-nice-group")
                             (autocmd! Filetype *.py '(print "Hello World") :group "a-nice-group"))))))
+
+(deftest macro/clear!
+  (testing "works properly with example"
+    (assert-eq (expr->str (clear! some-group))
+               (expr->str (vim.api.nvim_clear_autocmds {:group "some-group"}))))
+  (testing "works properly with arguments"
+    (assert-eq (expr->str (clear! some-group :buffer 0))
+               (expr->str (vim.api.nvim_clear_autocmds {:group "some-group" :buffer 0})))))
