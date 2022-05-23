@@ -4,7 +4,8 @@
 (import-macros {: fn?
                 : quoted?
                 : quoted->fn
-                : quoted->str} :themis.lib.compile-time)
+                : quoted->str
+                : expand-exprs} :themis.lib.compile-time)
 
 (deftest macro/expr->str
   (testing "works properly with an addition expression"
@@ -77,3 +78,11 @@
   (testing "works properly with a quoted string"
     (assert-eq (quoted->str '"something")
                "'\"something\"")))
+
+(deftest macro/expand-exprs
+  (testing "works properly win only one expression"
+    (assert-eq (expr->str (expand-exprs [(+ 1 1)]))
+               (expr->str (+ 1 1))))
+  (testing "works properly win only two expressions"
+    (assert-eq (expr->str (expand-exprs [(+ 1 1) (- 1 1)]))
+               (expr->str (do (+ 1 1) (- 1 1))))))
