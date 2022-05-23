@@ -1,15 +1,6 @@
 (local {: nil? : tbl? : str?} (require :themis.lib.types))
+(local {: begins-with?} (require :themis.lib.string))
 (local {: contains?} (require :themis.lib.seq))
-
-(fn get-key [name]
-  "Removes the `no` at the start of the name if it starts with a `no`."
-  (assert (str? name) "expected string for name")
-  (or (name:match "^no(.+)$") name))
-
-(fn get-value [name]
-  "Checks whether the name starts with no, if it does return `false`, else `true`."
-  (assert (str? name) "expected string for name")
-  (not (name:match "^no(.+)$")))
 
 (fn args->tbl [args options]
   "Converts a list of arguments to a table of key/value pairs.
@@ -30,9 +21,17 @@
     (var to-process nil)
     (each [i v (ipairs args)]
       (if (nil? to-process)
-        (if
-          (and (str? v)
-               (contains? booleans (get-key v))) (tset output (get-key v) (get-value v))
+        (if (str? v)
+          (let [begins-with-no? (begins-with? :no v)
+                v-with-no (if begins-with-no? v (.. :no v))
+                v-without-no (if begins-with-no? (v:match "^no(.+)$") v)]
+            (if begins-with-no?
+              (if (contains? booleans v-without-no) (doto output (tset v-without-no false))
+                (contains? booleans v-with-no) (doto output (tset v-with-no true))
+                (set to-process v))
+              (if (contains? booleans v-without-no) (doto output (tset v-without-no true))
+                (contains? booleans v-with-no) (doto output (tset v-with-no false))
+                (set to-process v))))
           (set to-process v))
         (do
           (tset output to-process v)
@@ -42,6 +41,4 @@
       (tset output last to-process))
     output))
 
-{: get-key
- : get-value
- : args->tbl}
+{: args->tbl}
