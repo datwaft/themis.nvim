@@ -16,9 +16,13 @@
 (fn ->str [x]
   (tostring x))
 
+(fn ->bool [x]
+  (if x true false))
+
 {: nil?
  : str?
  : num?
  : fn?
  : tbl?
- : ->str}
+ : ->str
+ : ->bool}
