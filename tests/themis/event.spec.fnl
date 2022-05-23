@@ -1,7 +1,8 @@
 (require-macros :fennel-test)
 (import-macros {: expr->str} :themis.lib.compile-time)
 
-(import-macros {: autocmd!} :themis.event)
+(import-macros {: autocmd!
+                : augroup!} :themis.event)
 
 (deftest macro/autocmd!
   (testing "works properly with the example"
@@ -99,3 +100,22 @@
                                                        {:callback (fn [] (print "Hello World"))
                                                         :desc "'(print \"Hello World\")"
                                                         :buffer 42})))))
+
+(deftest macro/augroup!
+  (testing "works properly with the example"
+    (assert-eq (expr->str (augroup! a-nice-group
+                            (autocmd! Filetype *.py '(print "Hello World"))
+                            (autocmd! Filetype *.sh '(print "Hello World"))))
+               (expr->str (do
+                            (vim.api.nvim_create_augroup "a-nice-group" {})
+                            (autocmd! Filetype *.py '(print "Hello World") :group "a-nice-group")
+                            (autocmd! Filetype *.sh '(print "Hello World") :group "a-nice-group")))))
+  (testing "works properly with an empty body"
+    (assert-eq (expr->str (augroup! a-nice-group))
+               (expr->str (vim.api.nvim_create_augroup "a-nice-group" {}))))
+  (testing "works properly one statement in the body"
+    (assert-eq (expr->str (augroup! a-nice-group
+                            (autocmd! Filetype *.py '(print "Hello World"))))
+               (expr->str (do
+                            (vim.api.nvim_create_augroup "a-nice-group" {})
+                            (autocmd! Filetype *.py '(print "Hello World") :group "a-nice-group"))))))
