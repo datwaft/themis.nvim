@@ -19,16 +19,20 @@
          becomes the description
 
   Example of use:
-    (autocmd! VimEnter *.py '(print \"Hello World\")
-              :once :group \"custom\"
-              \"This is a description\")
+  ```fennel
+  (autocmd! VimEnter *.py '(print \"Hello World\")
+            :once :group \"custom\"
+            \"This is a description\")
+  ```
   That compiles to:
-    (vim.api.nvim_create_autocmd :VimEnter
-                                 {:pattern \"*.py\"
-                                  :callback (fn [] (print \"Hello World\"))
-                                  :once true
-                                  :group \"custom\"
-                                  :desc \"This is a description\"})"
+  ```fennel
+  (vim.api.nvim_create_autocmd :VimEnter
+                               {:pattern \"*.py\"
+                                :callback (fn [] (print \"Hello World\"))
+                                :once true
+                                :group \"custom\"
+                                :desc \"This is a description\"})
+  ```"
   (let [options (args->tbl [...] {:booleans [:once :nested]
                                   :last :desc})
         event (if (and (tbl? event) (not (sym? event)))
@@ -59,14 +63,18 @@
   Accepts either a name or a name and a list of autocmd statements.
 
   Example of use:
-    (augroup! a-nice-group
-      (autocmd! Filetype *.py '(print \"Hello World\"))
-      (autocmd! Filetype *.sh '(print \"Hello World\")))
+  ```fennel
+  (augroup! a-nice-group
+    (autocmd! Filetype *.py '(print \"Hello World\"))
+    (autocmd! Filetype *.sh '(print \"Hello World\")))
+  ```
   That compiles to:
-    (do
-      (vim.api.nvim_create_augroup \"a-nice-group\" {})
-      (autocmd! Filetype *.py '(print \"Hello World\") :group \"a-nice-group\")
-      (autocmd! Filetype *.sh '(print \"Hello World\") :group \"a-nice-group\"))"
+  ```fennel
+  (do
+    (vim.api.nvim_create_augroup \"a-nice-group\" {})
+    (autocmd! Filetype *.py '(print \"Hello World\") :group \"a-nice-group\")
+    (autocmd! Filetype *.sh '(print \"Hello World\") :group \"a-nice-group\"))
+  ```"
   (assert-compile (or (str? name) (sym? name)) "expected string or symbol for name" name)
   (assert-compile (all? #(and (list? $) (= 'autocmd! (first $))) [...]) "expected autocmd exprs for body" ...)
   (expand-exprs
