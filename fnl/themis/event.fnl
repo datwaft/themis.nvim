@@ -76,14 +76,35 @@
     (autocmd! Filetype *.sh '(print \"Hello World\") :group \"a-nice-group\"))
   ```"
   (assert-compile (or (str? name) (sym? name)) "expected string or symbol for name" name)
-  (assert-compile (all? #(and (list? $) (= 'autocmd! (first $))) [...]) "expected autocmd exprs for body" ...)
+  (assert-compile (all? #(and (list? $) (or (= 'clear! (first $))
+                                            (= 'autocmd! (first $)))) [...]) "expected autocmd exprs for body" ...)
   (expand-exprs
     (let [name (->str name)]
       (icollect [_ expr (ipairs [...])
                  :into [`(vim.api.nvim_create_augroup ,name {})]]
-        (doto expr
-          (table.insert :group)
-          (table.insert name))))))
+        (if (= 'autocmd! (first expr))
+          (doto expr
+            (table.insert :group)
+            (table.insert name))
+          (let [[_ & args] expr]
+            `(clear! ,name ,(unpack args))))))))
+
+(lambda clear! [name ...]
+  "Clears an augroup using the nvim_clear_autocmds API.
+
+  Example of use:
+  ```fennel
+  (clear! some-group)
+  ```
+  That compiles to:
+  ```fennel
+  (vim.api.nvim_clear_autocmds {:group \"some-group\"})
+  ```"
+  (assert-compile (or (str? name) (sym? name)) "expected string or symbol for name" name)
+  (let [name (->str name)]
+    `(vim.api.nvim_clear_autocmds ,(doto (args->tbl [...])
+                                         (tset :group name)))))
 
 {: autocmd!
- : augroup!}
+ : augroup!
+ : clear!}
