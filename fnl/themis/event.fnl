@@ -101,9 +101,17 @@
   (vim.api.nvim_clear_autocmds {:group \"some-group\"})
   ```"
   (assert-compile (or (str? name) (sym? name)) "expected string or symbol for name" name)
-  (let [name (->str name)]
-    `(vim.api.nvim_clear_autocmds ,(doto (args->tbl [...])
-                                         (tset :group name)))))
+  (let [name (->str name)
+        args (icollect [_ v (ipairs [...])]
+               (if (= '<buffer> v) (->str v) v))
+        options (args->tbl args {:booleans ["<buffer>"]})
+        options (if options.<buffer>
+                  (doto options
+                    (tset "<buffer>" nil)
+                    (tset :buffer 0))
+                  options)
+        options (doto options (tset :group name))]
+    `(vim.api.nvim_clear_autocmds ,options)))
 
 {: autocmd!
  : augroup!
