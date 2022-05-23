@@ -5,7 +5,8 @@
         : num?
         : fn?
         : tbl?
-        : ->str} (require :themis.lib.types))
+        : ->str
+        : ->bool} (require :themis.lib.types))
 
 (deftest fn/nil?
   (testing "works properly with nil"
@@ -94,3 +95,11 @@
     (assert-eq (->str 1234) "1234"))
   (testing "works properly with string"
     (assert-eq (->str "Hello World") "Hello World")))
+
+(deftest fn/->bool
+  (testing "works properly with nil"
+    (assert-eq (->bool nil) false))
+  (testing "works properly with truthy value"
+    (assert-eq (->bool "Hello World") true))
+  (testing "works properly with falsy value"
+    (assert-eq (->bool false) false)))

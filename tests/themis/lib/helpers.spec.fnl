@@ -1,24 +1,6 @@
 (require-macros :fennel-test)
 
-(local {: get-key
-        : get-value
-        : args->tbl} (require :themis.lib.helpers))
-
-(deftest fn/get-key
-  (testing "works properly with truthy value"
-    (assert-eq (get-key "value")
-               "value"))
-  (testing "works properly with falsy value"
-    (assert-eq (get-key "novalue")
-               "value")))
-
-(deftest fn/get-value
-  (testing "works properly with truthy value"
-    (assert-eq (get-value "value")
-               true))
-  (testing "works properly with falsy value"
-    (assert-eq (get-value "novalue")
-               false)))
+(local {: args->tbl} (require :themis.lib.helpers))
 
 (deftest fn/args->tbl
   (testing "works properly with example"
@@ -52,4 +34,12 @@
   (testing "ignores last option if not specified"
     (assert-eq (args->tbl [:once "this is the description"]
                           {:booleans [:once]})
-               {:once true})))
+               {:once true}))
+  (testing "works properly with truthy inverted boolean option"
+    (assert-eq (args->tbl [:nowait]
+                          {:booleans [:nowait]})
+               {:nowait true}))
+  (testing "works properly with falsy inverted boolean option"
+    (assert-eq (args->tbl [:wait]
+                          {:booleans [:nowait]})
+               {:nowait false})))
