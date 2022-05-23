@@ -127,7 +127,15 @@
                (expr->str (do
                             (vim.api.nvim_create_augroup "a-nice-group" {:clear false})
                             (clear! "a-nice-group")
-                            (autocmd! Filetype *.py '(print "Hello World") :group "a-nice-group"))))))
+                            (autocmd! Filetype *.py '(print "Hello World") :group "a-nice-group")))))
+  (testing "works properly as a buffer only augroup"
+    (assert-eq (expr->str (augroup! a-nice-buffer-only-group
+                            (clear! <buffer>)
+                            (autocmd! VimEnter <buffer> '(print "Hello World"))))
+               (expr->str (do
+                            (vim.api.nvim_create_augroup "a-nice-buffer-only-group" {:clear false})
+                            (clear! "a-nice-buffer-only-group" <buffer>)
+                            (autocmd! VimEnter <buffer> '(print "Hello World") :group "a-nice-buffer-only-group"))))))
 
 (deftest macro/clear!
   (testing "works properly with example"
@@ -135,4 +143,7 @@
                (expr->str (vim.api.nvim_clear_autocmds {:group "some-group"}))))
   (testing "works properly with arguments"
     (assert-eq (expr->str (clear! some-group :buffer 0))
+               (expr->str (vim.api.nvim_clear_autocmds {:group "some-group" :buffer 0}))))
+  (testing "works properly for the current buffer"
+    (assert-eq (expr->str (clear! some-group <buffer>))
                (expr->str (vim.api.nvim_clear_autocmds {:group "some-group" :buffer 0})))))
