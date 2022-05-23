@@ -108,24 +108,24 @@
                             (autocmd! Filetype *.py '(print "Hello World"))
                             (autocmd! Filetype *.sh '(print "Hello World"))))
                (expr->str (do
-                            (vim.api.nvim_create_augroup "a-nice-group" {})
+                            (vim.api.nvim_create_augroup "a-nice-group" {:clear false})
                             (autocmd! Filetype *.py '(print "Hello World") :group "a-nice-group")
                             (autocmd! Filetype *.sh '(print "Hello World") :group "a-nice-group")))))
   (testing "works properly with an empty body"
     (assert-eq (expr->str (augroup! a-nice-group))
-               (expr->str (vim.api.nvim_create_augroup "a-nice-group" {}))))
+               (expr->str (vim.api.nvim_create_augroup "a-nice-group" {:clear false}))))
   (testing "works properly one statement in the body"
     (assert-eq (expr->str (augroup! a-nice-group
                             (autocmd! Filetype *.py '(print "Hello World"))))
                (expr->str (do
-                            (vim.api.nvim_create_augroup "a-nice-group" {})
+                            (vim.api.nvim_create_augroup "a-nice-group" {:clear false})
                             (autocmd! Filetype *.py '(print "Hello World") :group "a-nice-group")))))
   (testing "works properly with a clear! statement"
     (assert-eq (expr->str (augroup! a-nice-group
                             (clear!)
                             (autocmd! Filetype *.py '(print "Hello World"))))
                (expr->str (do
-                            (vim.api.nvim_create_augroup "a-nice-group" {})
+                            (vim.api.nvim_create_augroup "a-nice-group" {:clear false})
                             (clear! "a-nice-group")
                             (autocmd! Filetype *.py '(print "Hello World") :group "a-nice-group"))))))
 
