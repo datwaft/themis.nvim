@@ -4,6 +4,8 @@
         : first
         : second
         : last
+        : any?
+        : all?
         : contains?} (require :themis.lib.seq))
 
 (deftest fn/empty?
@@ -42,7 +44,23 @@
   (testing "works properly with two element list"
     (assert-eq (last [1 2]) 2)))
 
-(deftest fn/last
+(deftest fn/any?
+  (testing "works properly with empty list"
+    (assert-not (any? #(= 1 $) [])))
+  (testing "works properly with a list that doesn't satify the predicate"
+    (assert-not (any? #(= 9999 $) [0 1 2 3 4 5 6 7 9])))
+  (testing "works properly with a list that satisfies the predicate"
+    (assert-is (any? #(= 0 $) [0 1 2 3 4 5 6 7 9]))))
+
+(deftest fn/all?
+  (testing "works properly with empty list"
+    (assert-is (all? #(= 1 $) [])))
+  (testing "works properly with a list that doesn't satify the predicate"
+    (assert-not (all? #(= 1 $) [1 1 1 1 1 9 1 1])))
+  (testing "works properly with a list that satisfies the predicate"
+    (assert-is (all? #(= 1 $) [1 1 1 1 1 1 1 1]))))
+
+(deftest fn/contains?
   (testing "works properly with empty list"
     (assert-not (contains? [] 1))
     (assert-not (contains? [] "")))
