@@ -1,6 +1,7 @@
 (local {: args->tbl} (require :themis.lib.helpers))
+(local {: all? : first} (require :themis.lib.seq))
 (local {: ->str : nil? : tbl? : str?} (require :themis.lib.types))
-(local {: quoted? : quoted->fn : quoted->str} (require :themis.lib.compile-time))
+(local {: quoted? : quoted->fn : quoted->str : expand-exprs} (require :themis.lib.compile-time))
 
 (lambda autocmd! [event pattern command ...]
   "Create an autocommand using the nvim_create_autocmd API.
@@ -53,4 +54,28 @@
                   options)]
     `(vim.api.nvim_create_autocmd ,event ,options)))
 
-{: autocmd!}
+(lambda augroup! [name ...]
+  "Create an augroup using the nvim_create_augroup API.
+  Accepts either a name or a name and a list of autocmd statements.
+
+  Example of use:
+    (augroup! a-nice-group
+      (autocmd! Filetype *.py '(print \"Hello World\"))
+      (autocmd! Filetype *.sh '(print \"Hello World\")))
+  That compiles to:
+    (do
+      (vim.api.nvim_create_augroup \"a-nice-group\" {})
+      (autocmd! Filetype *.py '(print \"Hello World\") :group \"a-nice-group\")
+      (autocmd! Filetype *.sh '(print \"Hello World\") :group \"a-nice-group\"))"
+  (assert-compile (or (str? name) (sym? name)) "expected string or symbol for name" name)
+  (assert-compile (all? #(and (list? $) (= 'autocmd! (first $))) [...]) "expected autocmd exprs for body" ...)
+  (expand-exprs
+    (let [name (->str name)]
+      (icollect [_ expr (ipairs [...])
+                 :into [`(vim.api.nvim_create_augroup ,name {})]]
+        (doto expr
+          (table.insert :group)
+          (table.insert name))))))
+
+{: autocmd!
+ : augroup!}
