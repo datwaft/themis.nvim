@@ -10,14 +10,22 @@
 (lambda last [xs]
   (?. xs (length xs)))
 
-(lambda contains? [xs x]
-  (accumulate [contains? false
+(lambda any? [pred xs]
+  (accumulate [any? false
                _ v (ipairs xs)
-               :until contains?]
-    (= v x)))
+               :until any?]
+    (pred v)))
+
+(lambda all? [pred xs]
+  (not (any? #(not (pred $)) xs)))
+
+(lambda contains? [xs x]
+  (any? #(= $ x) xs))
 
 {: empty?
  : first
  : second
  : last
+ : any?
+ : all?
  : contains?}
