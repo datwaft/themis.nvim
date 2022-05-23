@@ -30,8 +30,17 @@
   (let [non-quoted (second expr)]
     (.. "'" (view non-quoted))))
 
+(lambda expand-exprs [exprs]
+  "Converts a list of expressions into either an expression - if only one
+  expression is in the list - or a do-expression containing the expressions."
+  (if (> (length exprs) 1)
+    `(do
+       ,(unpack exprs))
+    (first exprs)))
+
 {: expr->str
  : fn?
  : quoted?
  : quoted->fn
- : quoted->str}
+ : quoted->str
+ : expand-exprs}
