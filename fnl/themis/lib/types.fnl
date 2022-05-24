@@ -7,6 +7,9 @@
 (fn num? [x]
   (= :number (type x)))
 
+(fn bool? [x]
+  (= :boolean (type x)))
+
 (fn fn? [x]
   (= :function (type x)))
 
@@ -22,6 +25,7 @@
 {: nil?
  : str?
  : num?
+ : bool?
  : fn?
  : tbl?
  : ->str

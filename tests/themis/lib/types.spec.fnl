@@ -3,6 +3,7 @@
 (local {: nil?
         : str?
         : num?
+        : bool?
         : fn?
         : tbl?
         : ->str
@@ -11,6 +12,9 @@
 (deftest fn/nil?
   (testing "works properly with nil"
     (assert-is (nil? nil)))
+  (testing "works properly with boolean values"
+    (assert-not (nil? true))
+    (assert-not (nil? false)))
   (testing "works properly with number"
     (assert-not (nil? 1234)))
   (testing "works properly with string"
@@ -27,6 +31,9 @@
 (deftest fn/str?
   (testing "works properly with nil"
     (assert-not (str? nil)))
+  (testing "works properly with boolean values"
+    (assert-not (str? true))
+    (assert-not (str? false)))
   (testing "works properly with number"
     (assert-not (str? 1234)))
   (testing "works properly with string"
@@ -43,6 +50,9 @@
 (deftest fn/num?
   (testing "works properly with nil"
     (assert-not (num? nil)))
+  (testing "works properly with boolean values"
+    (assert-not (num? true))
+    (assert-not (num? false)))
   (testing "works properly with number"
     (assert-is (num? 1234)))
   (testing "works properly with string"
@@ -56,9 +66,31 @@
   (testing "works properly with hash-function"
     (assert-not (num? #$))))
 
+(deftest fn/bool?
+  (testing "works properly with nil"
+    (assert-not (bool? nil)))
+  (testing "works properly with boolean values"
+    (assert-is (bool? true))
+    (assert-is (bool? false)))
+  (testing "works properly with number"
+    (assert-not (bool? 1234)))
+  (testing "works properly with string"
+    (assert-not (bool? "Hello World")))
+  (testing "works properly with empty list"
+    (assert-not (bool? [])))
+  (testing "works properly with empty table"
+    (assert-not (bool? {})))
+  (testing "works properly with function"
+    (assert-not (bool? (fn [x] x))))
+  (testing "works properly with hash-function"
+    (assert-not (bool? #$))))
+
 (deftest fn/fn?
   (testing "works properly with nil"
     (assert-not (fn? nil)))
+  (testing "works properly with boolean values"
+    (assert-not (fn? true))
+    (assert-not (fn? false)))
   (testing "works properly with number"
     (assert-not (fn? 1234)))
   (testing "works properly with string"
@@ -75,6 +107,9 @@
 (deftest fn/tbl?
   (testing "works properly with nil"
     (assert-not (tbl? nil)))
+  (testing "works properly with boolean values"
+    (assert-not (tbl? true))
+    (assert-not (tbl? false)))
   (testing "works properly with number"
     (assert-not (tbl? 1234)))
   (testing "works properly with string"
