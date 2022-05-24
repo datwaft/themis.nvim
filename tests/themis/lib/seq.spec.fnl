@@ -6,7 +6,8 @@
         : last
         : any?
         : all?
-        : contains?} (require :themis.lib.seq))
+        : contains?
+        : flatten} (require :themis.lib.seq))
 
 (deftest fn/empty?
   (testing "works properly with empty list"
@@ -70,3 +71,15 @@
   (testing "works properly with a list of three elements"
     (assert-is (contains? [1 2 3] 2))
     (assert-not (contains? [1 2 3] 4))))
+
+(deftest fn/flatten
+  (testing "works properly with empty list"
+    (assert-eq (flatten []) []))
+  (testing "works properly with one element list"
+    (assert-eq (flatten [:a]) [:a]))
+  (testing "works properly with a list of a list of one element"
+    (assert-eq (flatten [[:a]]) [:a]))
+  (testing "works properly a mixed list"
+    (assert-eq (flatten [:a :b [:c :d] :e]) [:a :b :c :d :e]))
+  (testing "works properly a nested list"
+    (assert-eq (flatten [:a [:b [:c [:d [:e]]]]]) [:a :b :c :d :e])))

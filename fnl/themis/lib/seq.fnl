@@ -1,3 +1,5 @@
+(local {: tbl?} (require :themis.lib.types))
+
 (lambda empty? [xs]
   (= 0 (length xs)))
 
@@ -22,10 +24,18 @@
 (lambda contains? [xs x]
   (any? #(= $ x) xs))
 
+(lambda flatten [x]
+  (accumulate [output []
+               _ v (ipairs x)]
+    (if (tbl? v)
+      (icollect [_ v (ipairs (flatten v)) :into output] v)
+      (doto output (table.insert v)))))
+
 {: empty?
  : first
  : second
  : last
  : any?
  : all?
- : contains?}
+ : contains?
+ : flatten}
