@@ -1,0 +1,2 @@
+require("hotpot")
+require("conf")
