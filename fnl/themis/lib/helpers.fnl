@@ -5,14 +5,18 @@
 (fn args->tbl [args options]
   "Converts a list of arguments to a table of key/value pairs.
   Example of use:
-    (args->tbl [:once :group \"something\" :buffer 0 \"this is the description\"]
-               {:booleans [:once]
-                :last :desc})
+  ```fennel
+  (args->tbl [:once :group \"something\" :buffer 0 \"this is the description\"]
+             {:booleans [:once]
+              :last :desc})
+  ```
   That returns:
-    {:once true
-     :group \"something\"
-     :buffer 0
-     :desc \"this is the description\"}"
+  ```fennel
+  {:once true
+   :group \"something\"
+   :buffer 0
+   :desc \"this is the description\"}
+  ```"
   (assert (tbl? args) "expected table for args")
   (let [options (or options {})
         booleans (or options.booleans [])
