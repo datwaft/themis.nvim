@@ -1,6 +1,7 @@
 (require-macros :fennel-test)
 
-(local {: args->tbl} (require :themis.lib.helpers))
+(local {: args->tbl
+        : tbl->args} (require :themis.lib.helpers))
 
 (deftest fn/args->tbl
   (testing "works properly with example"
@@ -43,3 +44,45 @@
     (assert-eq (args->tbl [:wait]
                           {:booleans [:nowait]})
                {:nowait false})))
+
+(deftest fn/tbl->args
+  (testing "works properly with example"
+    (let [tbl {:once true
+               :group "something"
+               :buffer 0
+               :desc "this is the description"}]
+      (assert-eq (args->tbl (tbl->args tbl {:last :desc})
+                            {:booleans [:once]
+                             :last :desc})
+                 tbl)))
+  (testing "works properly without booleans"
+    (let [tbl {:group "something"
+               :buffer 0
+               :desc "this is the description"}]
+      (assert-eq (args->tbl (tbl->args tbl {:last :desc})
+                            {:last :desc})
+                 tbl)))
+  (testing "works properly with booleans"
+    (let [tbl {:once true
+               :group "something"
+               :buffer 0
+               :desc "this is the description"}]
+      (assert-eq (args->tbl (tbl->args tbl {:last :desc})
+                            {:booleans [:once]
+                             :last :desc})
+                 tbl)))
+  (testing "works properly with options"
+    (let [tbl {:once true
+               :group "something"
+               :buffer 0
+               :desc "this is the description"}]
+      (assert-eq (args->tbl (tbl->args tbl {:last :desc})
+                            {:booleans [:once]
+                             :last :desc})
+                 tbl)))
+  (testing "works properly without options"
+    (let [tbl {:group "something"
+               :buffer 0
+               :desc "this is the description"}]
+      (assert-eq (args->tbl (tbl->args tbl))
+                 tbl))))
