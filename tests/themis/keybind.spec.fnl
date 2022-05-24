@@ -1,7 +1,8 @@
 (require-macros :fennel-test)
 (import-macros {: expr->str} :themis.lib.compile-time)
 
-(import-macros {: map!} :themis.keybind)
+(import-macros {: map!
+                : buf-map!} :themis.keybind)
 
 (deftest macro/map!
   (testing "works properly with the example"
@@ -65,3 +66,13 @@
                (expr->str (vim.keymap.set [:n :v] "<leader>lr" (fn [] (print "Hello World"))
                                           {:nowait false
                                            :desc "'(print \"Hello World\")"})))))
+
+(deftest macro/buf-map!
+  (testing "works properly with the example"
+    (assert-eq (expr->str (buf-map! [nv] "<leader>lr" vim.lsp.references
+                                :silent
+                                "This is a description"))
+               (expr->str (vim.keymap.set [:n :v] "<leader>lr" vim.lsp.references
+                                          {:silent true
+                                           :buffer 0
+                                           :desc "This is a description"})))))

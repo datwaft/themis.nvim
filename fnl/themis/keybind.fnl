@@ -1,4 +1,4 @@
-(local {: args->tbl} (require :themis.lib.helpers))
+(local {: args->tbl : tbl->args} (require :themis.lib.helpers))
 (local {: ->str : nil? : str?} (require :themis.lib.types))
 (local {: fn? : quoted? : quoted->fn : quoted->str} (require :themis.lib.compile-time))
 
@@ -47,4 +47,44 @@
         rhs (if (quoted? rhs) (quoted->fn rhs) rhs)]
     `(vim.keymap.set ,modes ,lhs ,rhs ,options)))
 
-{: map!}
+(lambda buf-map! [[modes] lhs rhs ...]
+  "Add a new mapping using the vim.keymap.set API.
+  Sets by default the buffer option.
+
+  Accepts the following arguments:
+  modes -> is a sequence containing a symbol, each character of the symbol is a mode.
+  lhs -> must be an string.
+  rhs -> can be an string, a symbol, a function or a quoted expression.
+  ... -> a list of options. The valid boolean options are the following:
+         - nowait
+         - silent
+         - script
+         - expr
+         - replace_keycodes
+         - remap
+         - unique
+         These options can be prepended by 'no' to set them to false.
+         The last option that doesn't have a pair and is not boolean will become the description.
+
+  Example of use:
+  ```fennel
+  (buf-map! [nv] \"<leader>lr\" vim.lsp.references
+        :silent
+        \"This is a description\")
+  ```
+  That compiles to:
+  ```fennel
+  (vim.keymap.set [:n :v] \"<leader>lr\" vim.lsp.references
+                  {:silent true
+                   :buffer 0
+                   :desc \"This is a description\"})
+  ```"
+  (let [args [...]
+        tbl (args->tbl args {:booleans [:nowait :silent :script :expr :replace_keycodes :remap :unique]
+                             :last :desc})
+        tbl (doto tbl (tset :buffer 0))
+        args (tbl->args tbl {:last :desc})]
+    (map! [modes] lhs rhs (unpack args))))
+
+{: map!
+ : buf-map!}

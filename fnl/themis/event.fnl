@@ -1,4 +1,4 @@
-(local {: args->tbl} (require :themis.lib.helpers))
+(local {: args->tbl : tbl->args} (require :themis.lib.helpers))
 (local {: all? : first} (require :themis.lib.seq))
 (local {: ->str : nil? : tbl? : str?} (require :themis.lib.types))
 (local {: fn? : quoted? : quoted->fn : quoted->str : expand-exprs} (require :themis.lib.compile-time))
@@ -85,9 +85,12 @@
       (icollect [_ expr (ipairs [...])
                  :into [`(vim.api.nvim_create_augroup ,name {:clear false})]]
         (if (= 'autocmd! (first expr))
-          (doto expr
-            (table.insert :group)
-            (table.insert name))
+          (let [[_ event pattern command & args] expr
+                tbl (args->tbl args {:booleans [:once :nested]
+                                     :last :desc})
+                tbl (doto tbl (tset :group name))
+                args (tbl->args tbl {:last :desc})]
+            `(autocmd! ,event ,pattern ,command ,(unpack args)))
           (let [[_ & args] expr]
             `(clear! ,name ,(unpack args))))))))
 
