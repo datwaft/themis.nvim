@@ -1,5 +1,7 @@
+(local {: ->str} (require :themis.lib.types))
 (local {: first
         : second} (require :themis.lib.seq))
+(local {:sumhexa md5} (require :themis.deps.md5))
 
 (lambda expr->str [expr]
   `(macrodebug ,expr nil))
@@ -38,9 +40,26 @@
        ,(unpack exprs))
     (first exprs)))
 
+(lambda gensym-checksum [x ?options]
+  "Generates a new symbol from the checksum of the object passed as a parameter
+  after it is casted into an string using the `view` function.
+  You can also pass a prefix or a suffix into the options optional table.
+  This function depends on the `themis.deps.md5` library."
+  (let [options (or ?options {})
+        prefix (or options.prefix "")
+        suffix (or options.suffix "")]
+    (sym (.. prefix (md5 (view x)) suffix))))
+
+(lambda vlua [x]
+  "Return a symbol mapped to `v:lua.%s()` where `%s` is the symbol."
+  (assert-compile (sym? x) "expected symbol for x" x)
+  (string.format "v:lua.%s()" (->str x)))
+
 {: expr->str
  : fn?
  : quoted?
  : quoted->fn
  : quoted->str
- : expand-exprs}
+ : expand-exprs
+ : gensym-checksum
+ : vlua}
