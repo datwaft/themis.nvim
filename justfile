@@ -8,6 +8,7 @@ fennel-options := trim(replace(replace("
   --add-macro-path 'fnl/?.fnl'
   --add-fennel-path 'deps/?.fnl'
   --add-macro-path 'deps/?/init-macros.fnl'
+  --add-package-path 'lua/?.lua'
 ", "\n", ' '), '   ', ' '))
 runner := 'deps/fennel-test/runner'
 
