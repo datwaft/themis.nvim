@@ -1,5 +1,7 @@
 # themis.nvim
 
+![tests workflow](https://github.com/datwaft/themis.nvim/actions/workflows/tests.yml/badge.svg)
+
 Fennel macros for hotpot.nvim created for my personal Neovim configuration.
 
 **Warning:** these macros were created for my personal configuration so they
