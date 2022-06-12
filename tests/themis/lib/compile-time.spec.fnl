@@ -105,3 +105,8 @@
   (testing "works properly with a prefix and a suffix"
     (assert-eq (expr->str (gensym-checksum (+ 1 1) {:prefix "__" :suffix "__"}))
                (expr->str __d09f71856be3__))))
+
+(deftest macro/vlua
+  (testing "works properly with a simple symbol"
+    (assert-eq (expr->str (vlua symbol))
+               (expr->str "v:lua.symbol()"))))
