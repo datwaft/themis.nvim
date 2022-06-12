@@ -5,7 +5,9 @@
                 : quoted?
                 : quoted->fn
                 : quoted->str
-                : expand-exprs} :themis.lib.compile-time)
+                : expand-exprs
+                : gensym-checksum
+                : vlua} :themis.lib.compile-time)
 
 (deftest macro/expr->str
   (testing "works properly with an addition expression"
@@ -86,3 +88,20 @@
   (testing "works properly win only two expressions"
     (assert-eq (expr->str (expand-exprs [(+ 1 1) (- 1 1)]))
                (expr->str (do (+ 1 1) (- 1 1))))))
+
+(deftest macro/gensym-checksum
+  (testing "works properly with no options"
+    (assert-eq (expr->str (gensym-checksum (+ 1 1)))
+               (expr->str d09f71856be3)))
+  (testing "works properly with empty options"
+    (assert-eq (expr->str (gensym-checksum (+ 1 1) {}))
+               (expr->str d09f71856be3)))
+  (testing "works properly with a prefix"
+    (assert-eq (expr->str (gensym-checksum (+ 1 1) {:prefix "__"}))
+               (expr->str __d09f71856be3)))
+  (testing "works properly with a suffix"
+    (assert-eq (expr->str (gensym-checksum (+ 1 1) {:suffix "__"}))
+               (expr->str d09f71856be3__)))
+  (testing "works properly with a prefix and a suffix"
+    (assert-eq (expr->str (gensym-checksum (+ 1 1) {:prefix "__" :suffix "__"}))
+               (expr->str __d09f71856be3__))))
