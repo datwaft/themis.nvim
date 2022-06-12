@@ -1,7 +1,7 @@
 (local {: ->str} (require :themis.lib.types))
 (local {: first
         : second} (require :themis.lib.seq))
-(local {:sumhexa md5} (require :themis.deps.md5))
+(local {: djb2} (require :themis.lib.crypt))
 
 (lambda expr->str [expr]
   `(macrodebug ,expr nil))
@@ -44,11 +44,11 @@
   "Generates a new symbol from the checksum of the object passed as a parameter
   after it is casted into an string using the `view` function.
   You can also pass a prefix or a suffix into the options optional table.
-  This function depends on the `themis.deps.md5` library."
+  This function depends on the djb2 hash function."
   (let [options (or ?options {})
         prefix (or options.prefix "")
         suffix (or options.suffix "")]
-    (sym (.. prefix (md5 (view x)) suffix))))
+    (sym (.. prefix (string.format "%x" (djb2 (view x)) suffix)))))
 
 (lambda vlua [x]
   "Return a symbol mapped to `v:lua.%s()` where `%s` is the symbol."
