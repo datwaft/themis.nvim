@@ -1,4 +1,4 @@
-(local {: tbl?} (require :themis.lib.types))
+(local {: tbl? : nil? : num?} (require :themis.lib.types))
 
 (lambda empty? [xs]
   (= 0 (length xs)))
@@ -24,12 +24,16 @@
 (lambda contains? [xs x]
   (any? #(= $ x) xs))
 
-(lambda flatten [x]
-  (accumulate [output []
-               _ v (ipairs x)]
-    (if (tbl? v)
-      (icollect [_ v (ipairs (flatten v)) :into output] v)
-      (doto output (table.insert v)))))
+(lambda flatten [x ?levels]
+  (assert (tbl? x) "expected tbl for x")
+  (assert (or (nil? ?levels) (num? ?levels)) "expected number or nil for levels")
+  (if (or (nil? ?levels) (> ?levels 0))
+    (accumulate [output []
+                 _ v (ipairs x)]
+      (if (tbl? v)
+        (icollect [_ v (ipairs (flatten v (if (nil? ?levels) nil (- ?levels 1)))) :into output] v)
+        (doto output (table.insert v))))
+    x))
 
 {: empty?
  : first
