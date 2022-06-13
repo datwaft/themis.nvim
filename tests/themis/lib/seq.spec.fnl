@@ -79,7 +79,13 @@
     (assert-eq (flatten [:a]) [:a]))
   (testing "works properly with a list of a list of one element"
     (assert-eq (flatten [[:a]]) [:a]))
-  (testing "works properly a mixed list"
+  (testing "works properly with a mixed list"
     (assert-eq (flatten [:a :b [:c :d] :e]) [:a :b :c :d :e]))
-  (testing "works properly a nested list"
-    (assert-eq (flatten [:a [:b [:c [:d [:e]]]]]) [:a :b :c :d :e])))
+  (testing "works properly with a nested list"
+    (assert-eq (flatten [:a [:b [:c [:d [:e]]]]]) [:a :b :c :d :e]))
+  (testing "works properly with a nested list and with 0 levels (explicitly)"
+    (assert-eq (flatten [:a [:b [:c [:d [:e]]]]] 0) [:a [:b [:c [:d [:e]]]]]))
+  (testing "works properly with a nested list and with 1 level"
+    (assert-eq (flatten [:a [:b [:c [:d [:e]]]]] 1) [:a :b [:c [:d [:e]]]]))
+  (testing "works properly with a nested list and with 2 levels"
+    (assert-eq (flatten [:a [:b [:c [:d [:e]]]]] 2) [:a :b :c [:d [:e]]])))
