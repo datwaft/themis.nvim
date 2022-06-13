@@ -100,7 +100,14 @@
                (expr->str (vim.api.nvim_create_autocmd :VimEnter
                                                        {:callback (fn [] (print "Hello World"))
                                                         :desc "'(print \"Hello World\")"
-                                                        :buffer 42})))))
+                                                        :buffer 42}))))
+  (testing "works properly when buffer is set using a symbol"
+    (assert-eq (expr->str (autocmd! VimEnter <buffer> '(print "Hello World")
+                                    :buffer bufnr))
+               (expr->str (vim.api.nvim_create_autocmd :VimEnter
+                                                       {:callback (fn [] (print "Hello World"))
+                                                        :desc "'(print \"Hello World\")"
+                                                        :buffer bufnr})))))
 
 (deftest macro/augroup!
   (testing "works properly with the example"
@@ -143,7 +150,16 @@
                (expr->str (do
                             (vim.api.nvim_create_augroup "a-nice-group" {:clear false})
                             (autocmd! Filetype *.py '(print "Hello World") :group "a-nice-group" "This is a description")
-                            (autocmd! Filetype *.sh '(print "Hello World") :group "a-nice-group" "This is a description"))))))
+                            (autocmd! Filetype *.sh '(print "Hello World") :group "a-nice-group" "This is a description")))))
+  (testing "works properly as a buffer only augroup with symbol as buffer"
+    (assert-eq (expr->str (augroup! a-nice-buffer-only-group
+                            (clear! :buffer bufnr)
+                            (autocmd! VimEnter <buffer> '(print "Hello World")
+                                      :buffer bufnr)))
+               (expr->str (do
+                            (vim.api.nvim_create_augroup "a-nice-buffer-only-group" {:clear false})
+                            (clear! "a-nice-buffer-only-group" :buffer bufnr)
+                            (autocmd! VimEnter <buffer> '(print "Hello World") :group "a-nice-buffer-only-group" :buffer bufnr))))))
 
 (deftest macro/clear!
   (testing "works properly with example"

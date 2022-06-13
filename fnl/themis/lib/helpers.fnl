@@ -68,7 +68,7 @@
         output (if (not (nil? last))
                  (doto output (table.insert (. tbl last)))
                  output)]
-    (flatten output)))
+    (flatten output 1)))
 
 {: args->tbl
  : tbl->args}

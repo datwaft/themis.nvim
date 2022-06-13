@@ -85,4 +85,8 @@
                :buffer 0
                :desc "this is the description"}]
       (assert-eq (args->tbl (tbl->args tbl))
-                 tbl))))
+                 tbl)))
+  (testing "works properly with a nested list for some value"
+    (let [tbl {:some [1 [2 [3]]]}]
+      (assert-eq (tbl->args tbl)
+                 [:some [1 [2 [3]]]]))))
