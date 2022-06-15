@@ -1,6 +1,6 @@
 # use with https://github.com/casey/just
 
-fennel-binary := './fennel'
+fennel-binary := 'deps/fennel'
 lua-binary := 'lua'
 fennel-options := trim(replace(replace("
   --no-compiler-sandbox
