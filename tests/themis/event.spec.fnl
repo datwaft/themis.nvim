@@ -108,12 +108,12 @@
                                                         :desc "'(print \"Hello World\")"
                                                         :buffer bufnr}))))
   (testing "works properly when a group and an option is set"
-    (assert-eq (expr->str (autocmd! VimEnter * '(print "Hello World")
+    (assert-eq (expr->str (autocmd! VimEnter * '(mkdir databases-folder :p)
                                     {:once true :group "a-group"}))
                (expr->str (vim.api.nvim_create_autocmd :VimEnter
                                                        {:pattern "*"
-                                                        :callback (fn [] (print "Hello World"))
-                                                        :desc "'(print \"Hello World\")"
+                                                        :callback (fn [] (mkdir databases-folder :p))
+                                                        :desc "'(mkdir databases-folder \"p\")"
                                                         :once true
                                                         :group "a-group"})))))
 
