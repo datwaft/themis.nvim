@@ -7,8 +7,7 @@
 (deftest macro/map!
   (testing "works properly with the example"
     (assert-eq (expr->str (map! [nv] "<leader>lr" vim.lsp.references
-                                :silent :buffer 0
-                                "This is a description"))
+                                {:silent true :buffer 0 :desc "This is a description"}))
                (expr->str (vim.keymap.set [:n :v] "<leader>lr" vim.lsp.references
                                           {:silent true
                                            :buffer 0
@@ -37,41 +36,28 @@
     (assert-eq (expr->str (map! [nv] "<leader>lr" '(print "Hello World")))
                (expr->str (vim.keymap.set [:n :v] "<leader>lr" (fn [] (print "Hello World"))
                                           {:desc "'(print \"Hello World\")"}))))
-  (testing "works properly when desc is included"
+  (testing "works properly when desc is specified"
     (assert-eq (expr->str (map! [nv] "<leader>lr" '(print "Hello World")
-                                :desc "prints Hello World"))
+                                {:desc "prints Hello World"}))
                (expr->str (vim.keymap.set [:n :v] "<leader>lr" (fn [] (print "Hello World"))
                                           {:desc "prints Hello World"}))))
   (testing "works properly when some boolean option is truthy"
     (assert-eq (expr->str (map! [nv] "<leader>lr" '(print "Hello World")
-                                :silent))
+                                {:silent true}))
                (expr->str (vim.keymap.set [:n :v] "<leader>lr" (fn [] (print "Hello World"))
                                           {:silent true
                                            :desc "'(print \"Hello World\")"}))))
   (testing "works properly when some boolean option is falsy"
     (assert-eq (expr->str (map! [nv] "<leader>lr" '(print "Hello World")
-                                :nosilent))
+                                {:silent false}))
                (expr->str (vim.keymap.set [:n :v] "<leader>lr" (fn [] (print "Hello World"))
                                           {:silent false
-                                           :desc "'(print \"Hello World\")"}))))
-  (testing "works properly when nowait boolean option is truthy"
-    (assert-eq (expr->str (map! [nv] "<leader>lr" '(print "Hello World")
-                                :nowait))
-               (expr->str (vim.keymap.set [:n :v] "<leader>lr" (fn [] (print "Hello World"))
-                                          {:nowait true
-                                           :desc "'(print \"Hello World\")"}))))
-  (testing "works properly when nowait boolean option is falsy"
-    (assert-eq (expr->str (map! [nv] "<leader>lr" '(print "Hello World")
-                                :wait))
-               (expr->str (vim.keymap.set [:n :v] "<leader>lr" (fn [] (print "Hello World"))
-                                          {:nowait false
                                            :desc "'(print \"Hello World\")"})))))
 
 (deftest macro/buf-map!
   (testing "works properly with the example"
     (assert-eq (expr->str (buf-map! [nv] "<leader>lr" vim.lsp.references
-                                :silent
-                                "This is a description"))
+                                    {:silent true :desc "This is a description"}))
                (expr->str (vim.keymap.set [:n :v] "<leader>lr" vim.lsp.references
                                           {:silent true
                                            :buffer 0
