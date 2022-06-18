@@ -176,7 +176,8 @@
                (expr->str (do
                             (vim.api.nvim_create_augroup "create-folders-if-non-existent" {:clear false})
                             (clear! "create-folders-if-non-existent")
-                            (autocmd! VimEnter * '(mkdir databases-folder :p) {:group "create-folders-if-non-existent" :once true}))))))
+                            (autocmd! VimEnter * '(mkdir databases-folder :p)
+                                      {:once true :group "create-folders-if-non-existent"}))))))
 
 
 (deftest macro/clear!
