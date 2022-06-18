@@ -31,11 +31,9 @@
   (let [modes (icollect [char (string.gmatch (->str modes) ".")] char)
         options (or ?options {})
         options (if (nil? options.desc)
-                  (doto options
-                        (tset :desc
-                              (if (quoted? rhs) (quoted->str rhs)
-                                (str? rhs) rhs
-                                (view rhs))))
+                  (doto options (tset :desc (if (quoted? rhs) (quoted->str rhs)
+                                              (str? rhs) rhs
+                                              (view rhs))))
                   options)
         rhs (if (quoted? rhs) (quoted->fn rhs) rhs)]
     `(vim.keymap.set ,modes ,lhs ,rhs ,options)))
