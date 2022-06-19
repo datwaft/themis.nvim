@@ -1,7 +1,7 @@
 # use with https://github.com/casey/just
 
 fennel-binary := 'deps/fennel'
-lua-binary := 'lua'
+lua-binary := 'luajit'
 fennel-options := trim(replace(replace("
   --no-compiler-sandbox
   --add-fennel-path 'fnl/?.fnl'
