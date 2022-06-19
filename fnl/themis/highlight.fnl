@@ -1,4 +1,5 @@
 (local {: ->str : tbl?} (require :themis.lib.types))
+(local itable (require :themis.deps.itable))
 
 (lambda highlight! [name attributes colors]
   "Sets a highlight group globally using the vim.api.nvim_set_hl API.
@@ -36,9 +37,9 @@
   (assert-compile (tbl? attributes) "expected table for attributes" attributes)
   (assert-compile (tbl? colors) "expected colors for colors" colors)
   (let [name (->str name)
-        definition (collect [_ attr (ipairs attributes)
-                             :into colors]
-                     (->str attr) true)]
+        definition (accumulate [definition colors
+                                _ attr (ipairs attributes)]
+                     (itable.assoc definition (->str attr) true))]
     `(vim.api.nvim_set_hl 0 ,name ,definition)))
 
 {: highlight!}
