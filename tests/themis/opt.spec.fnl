@@ -35,13 +35,13 @@
   (testing "works properly with a quoted expression"
     (assert-eq (expr->str (set! spell '(+ 1 2)))
                (expr->str (do
-                            (tset _G "__b824aea3b3e8c661" (fn {} (+ 1 2)))
-                            (tset vim.opt :spell "v:lua.__b824aea3b3e8c661()")))))
+                            (tset _G "__b3e8c661" (fn {} (+ 1 2)))
+                            (tset vim.opt :spell "v:lua.__b3e8c661()")))))
   (testing "works properly with a hash function"
     (assert-eq (expr->str (set! spell #(+ 1 2)))
                (expr->str (do
-                            (tset _G "__53909b8a8e8b61cd" #(+ 1 2))
-                            (tset vim.opt :spell "v:lua.__53909b8a8e8b61cd()")))))
+                            (tset _G "__8e8b61cd" #(+ 1 2))
+                            (tset vim.opt :spell "v:lua.__8e8b61cd()")))))
   (testing "works properly with append"
     (assert-eq (expr->str (set! list+ "something"))
                (expr->str (: (. vim.opt "list") :append "something"))))
@@ -83,13 +83,13 @@
   (testing "works properly with a quoted expression"
     (assert-eq (expr->str (local-set! spell '(+ 1 2)))
                (expr->str (do
-                            (tset _G "__b824aea3b3e8c661" (fn {} (+ 1 2)))
-                            (tset vim.opt_local :spell "v:lua.__b824aea3b3e8c661()")))))
+                            (tset _G "__b3e8c661" (fn {} (+ 1 2)))
+                            (tset vim.opt_local :spell "v:lua.__b3e8c661()")))))
   (testing "works properly with a hash function"
     (assert-eq (expr->str (local-set! spell #(+ 1 2)))
                (expr->str (do
-                            (tset _G "__53909b8a8e8b61cd" #(+ 1 2))
-                            (tset vim.opt_local :spell "v:lua.__53909b8a8e8b61cd()")))))
+                            (tset _G "__8e8b61cd" #(+ 1 2))
+                            (tset vim.opt_local :spell "v:lua.__8e8b61cd()")))))
   (testing "works properly with append"
     (assert-eq (expr->str (local-set! list+ "something"))
                (expr->str (: (. vim.opt_local "list") :append "something"))))

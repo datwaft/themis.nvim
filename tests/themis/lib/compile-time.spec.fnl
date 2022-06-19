@@ -91,20 +91,20 @@
 
 (deftest macro/gensym-checksum
   (testing "works properly with no options"
-    (assert-eq (expr->str (gensym-checksum (+ 1 1)))
-               (expr->str d09f71856be3)))
+    (assert-eq (expr->str (gensym-checksum (->str [:a :b :c])))
+               (expr->str e7163204)))
   (testing "works properly with empty options"
-    (assert-eq (expr->str (gensym-checksum (+ 1 1) {}))
-               (expr->str d09f71856be3)))
+    (assert-eq (expr->str (gensym-checksum (->str [:a :b :c]) {}))
+               (expr->str e7163204)))
   (testing "works properly with a prefix"
-    (assert-eq (expr->str (gensym-checksum (+ 1 1) {:prefix "__"}))
-               (expr->str __d09f71856be3)))
+    (assert-eq (expr->str (gensym-checksum (->str [:a :b :c]) {:prefix "__"}))
+               (expr->str __e7163204)))
   (testing "works properly with a suffix"
-    (assert-eq (expr->str (gensym-checksum (+ 1 1) {:suffix "__"}))
-               (expr->str d09f71856be3__)))
+    (assert-eq (expr->str (gensym-checksum (->str [:a :b :c]) {:suffix "__"}))
+               (expr->str e7163204__)))
   (testing "works properly with a prefix and a suffix"
-    (assert-eq (expr->str (gensym-checksum (+ 1 1) {:prefix "__" :suffix "__"}))
-               (expr->str __d09f71856be3__))))
+    (assert-eq (expr->str (gensym-checksum (->str [:a :b :c]) {:prefix "__" :suffix "__"}))
+               (expr->str __e7163204__))))
 
 (deftest macro/vlua
   (testing "works properly with a simple symbol"
