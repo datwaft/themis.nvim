@@ -1,5 +1,4 @@
 (local {: tbl? : nil? : num?} (require :themis.lib.types))
-(local itable (require :themis.deps.itable))
 
 (lambda empty? [xs]
   (= 0 (length xs)))
@@ -32,8 +31,8 @@
     (accumulate [output []
                  _ v (ipairs x)]
       (if (tbl? v)
-        (itable.join output (flatten v (if (nil? ?levels) nil (- ?levels 1))))
-        (itable.insert output v)))
+        (icollect [_ v (ipairs (flatten v (if (nil? ?levels) nil (- ?levels 1)))) :into output] v)
+        (doto output (table.insert v))))
     x))
 
 {: empty?

@@ -27,10 +27,6 @@ runner := 'deps/fennel-test/runner'
 @test +files=`find tests/ -name '*.spec.fnl' | paste -sd ' '`: ensure
   {{fennel-binary}} --lua {{lua-binary}} {{fennel-options}} {{runner}} {{files}}
 
-# Compile a file
-@compile file: ensure
-  {{fennel-binary}} --lua {{lua-binary}} {{fennel-options}} -c {{file}}
-
 # Open a shell using Docker
 @shell:
   docker build -t themis.nvim . && docker run -it themis.nvim
