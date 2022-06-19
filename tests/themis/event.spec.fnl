@@ -179,7 +179,6 @@
                             (autocmd! VimEnter * '(mkdir databases-folder :p)
                                       {:once true :group "create-folders-if-non-existent"}))))))
 
-
 (deftest macro/clear!
   (testing "works properly with example"
     (assert-eq (expr->str (clear! some-group))
