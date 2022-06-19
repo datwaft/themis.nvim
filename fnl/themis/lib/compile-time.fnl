@@ -48,7 +48,7 @@
   (let [options (or ?options {})
         prefix (or options.prefix "")
         suffix (or options.suffix "")]
-    (sym (.. prefix (string.format "%x" (djb2 (view x))) suffix))))
+    (sym (.. prefix (djb2 (view x)) suffix))))
 
 (lambda vlua [x]
   "Return a symbol mapped to `v:lua.%s()` where `%s` is the symbol."
