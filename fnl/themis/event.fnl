@@ -1,7 +1,6 @@
 (local {: all? : first} (require :themis.lib.seq))
 (local {: ->str : nil? : tbl? : str?} (require :themis.lib.types))
 (local {: fn? : quoted? : quoted->fn : quoted->str : expand-exprs} (require :themis.lib.compile-time))
-(local itable (require :themis.deps.itable))
 
 (lambda autocmd! [event pattern command ?options]
   "Create an autocommand using the nvim_create_autocmd API.
@@ -42,18 +41,18 @@
         options (or ?options {})
         options (if (nil? options.buffer)
                   (if (= "<buffer>" pattern)
-                    (itable.assoc options :buffer 0)
-                    (itable.assoc options :pattern pattern))
+                    (doto options (tset :buffer 0))
+                    (doto options (tset :pattern pattern)))
                   options)
         options (if (str? command)
-                  (itable.assoc options :command command)
-                  (itable.assoc options :callback (if (quoted? command)
-                                                    (quoted->fn command)
-                                                    command)))
+                  (doto options (tset :command command))
+                  (doto options (tset :callback (if (quoted? command)
+                                                  (quoted->fn command)
+                                                  command))))
         options (if (nil? options.desc)
-                  (itable.assoc options :desc (if (quoted? command) (quoted->str command)
-                                                (str? command) command
-                                                (view command)))
+                  (doto options (tset :desc (if (quoted? command) (quoted->str command)
+                                              (str? command) command
+                                              (view command))))
                   options)]
     `(vim.api.nvim_create_autocmd ,event ,options)))
 
@@ -79,16 +78,15 @@
                                             (= 'autocmd! (first $)))) [...]) "expected autocmd exprs for body" ...)
   (expand-exprs
     (let [name (->str name)]
-      (itable.join
-        [`(vim.api.nvim_create_augroup ,name {:clear false})]
-        (icollect [_ expr (ipairs [...])]
-          (if (= 'autocmd! (first expr))
-            (let [[_ event pattern command ?options] expr
-                  options (or ?options {})
-                  options (itable.assoc options :group name)]
-              `(autocmd! ,event ,pattern ,command ,options))
-            (let [[_ ?options] expr]
-              `(clear! ,name ,?options))))))))
+      (icollect [_ expr (ipairs [...])
+                 :into [`(vim.api.nvim_create_augroup ,name {:clear false})]]
+        (if (= 'autocmd! (first expr))
+          (let [[_ event pattern command ?options] expr
+                options (or ?options {})
+                options (doto options (tset :group name))]
+            `(autocmd! ,event ,pattern ,command ,options))
+          (let [[_ ?options] expr]
+            `(clear! ,name ,?options)))))))
 
 (lambda clear! [name ?options]
   "Clears an augroup using the nvim_clear_autocmds API.
@@ -105,7 +103,7 @@
   (assert-compile (or (nil? ?options) (tbl? ?options)) "expected table for options" ?options)
   (let [name (->str name)
         options (or ?options {})
-        options (itable.assoc options :group name)]
+        options (doto options (tset :group name))]
     `(vim.api.nvim_clear_autocmds ,options)))
 
 {: autocmd!

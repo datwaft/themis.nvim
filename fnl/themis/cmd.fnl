@@ -1,6 +1,5 @@
 (local {: ->str : str? : nil? : tbl?} (require :themis.lib.types))
 (local {: fn? : quoted? : quoted->fn : quoted->str} (require :themis.lib.compile-time))
-(local itable (require :themis.deps.itable))
 
 (lambda shared-command! [api-function name command ?options]
   (assert-compile (sym? api-function) "expected symbol for api-function" api-function)
@@ -10,9 +9,9 @@
   (let [name (->str name)
         options (or ?options {})
         options (if (nil? options.desc)
-                  (itable.assoc options :desc (if (quoted? command) (quoted->str command)
-                                                (str? command) command
-                                                (view command)))
+                  (doto options (tset :desc (if (quoted? command) (quoted->str command)
+                                              (str? command) command
+                                              (view command))))
                   options)
         command (if (quoted? command) (quoted->fn command) command)]
     `(,api-function ,name ,command ,options)))

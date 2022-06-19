@@ -1,5 +1,4 @@
 (local {: str? : nil? : tbl? } (require :themis.lib.types))
-(local itable (require :themis.deps.itable))
 
 (tset _G :themis/pack [])
 (tset _G :themis/rock [])
@@ -19,7 +18,7 @@
                     :require* (values :config (string.format "require(\"%s\")" v))
                     :setup* (values :config (string.format "require(\"%s\").setup()" v))
                     _ (values k v)))]
-    (itable.assoc options 1 identifier)))
+    (doto options (tset 1 identifier))))
 
 (lambda rock [identifier ?options]
   "Return a mixed table with the identifier as the first sequential element and
@@ -29,7 +28,7 @@
   (assert-compile (str? identifier) "expected string for identifier" identifier)
   (if (not (nil? ?options)) (assert-compile (tbl? ?options) "expected table for options" ?options))
   (let [options (or ?options {})]
-    (itable.assoc options 1 identifier)))
+    (doto options (tset 1 identifier))))
 
 (lambda pack! [identifier ?options]
   "Declares a plugin with its options. This macro adds it to the themis/pack
@@ -58,7 +57,7 @@
     (tset _G :themis/rock [])
     `((. (require :packer) :startup)
       (fn []
-        ,(unpack (itable.join rocks packs))))))
+        ,(unpack (icollect [_ v (ipairs packs) :into rocks] v))))))
 
 {: pack
  : rock

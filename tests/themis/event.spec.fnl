@@ -106,16 +106,7 @@
                (expr->str (vim.api.nvim_create_autocmd :VimEnter
                                                        {:callback (fn [] (print "Hello World"))
                                                         :desc "'(print \"Hello World\")"
-                                                        :buffer bufnr}))))
-  (testing "works properly when a group and an option is set"
-    (assert-eq (expr->str (autocmd! VimEnter * '(mkdir databases-folder :p)
-                                    {:once true :group "a-group"}))
-               (expr->str (vim.api.nvim_create_autocmd :VimEnter
-                                                       {:pattern "*"
-                                                        :callback (fn [] (mkdir databases-folder :p))
-                                                        :desc "'(mkdir databases-folder \"p\")"
-                                                        :once true
-                                                        :group "a-group"})))))
+                                                        :buffer bufnr})))))
 
 (deftest macro/augroup!
   (testing "works properly with the example"
@@ -167,17 +158,7 @@
                (expr->str (do
                             (vim.api.nvim_create_augroup "a-nice-buffer-only-group" {:clear false})
                             (clear! "a-nice-buffer-only-group" {:buffer bufnr})
-                            (autocmd! VimEnter <buffer> '(print "Hello World") {:group "a-nice-buffer-only-group" :buffer bufnr})))))
-  (testing "works properly with an autocmd! executed just once"
-    (assert-eq (expr->str (augroup! create-folders-if-non-existent
-                            (clear!)
-                            (autocmd! VimEnter * '(mkdir databases-folder :p)
-                                      {:once true})))
-               (expr->str (do
-                            (vim.api.nvim_create_augroup "create-folders-if-non-existent" {:clear false})
-                            (clear! "create-folders-if-non-existent")
-                            (autocmd! VimEnter * '(mkdir databases-folder :p)
-                                      {:once true :group "create-folders-if-non-existent"}))))))
+                            (autocmd! VimEnter <buffer> '(print "Hello World") {:group "a-nice-buffer-only-group" :buffer bufnr}))))))
 
 (deftest macro/clear!
   (testing "works properly with example"
