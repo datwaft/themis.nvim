@@ -30,7 +30,3 @@ runner := 'deps/fennel-test/runner'
 # Execute file
 @compile file: ensure
   {{fennel-binary}} --lua {{lua-binary}} {{fennel-options}} -c {{file}}
-
-# Open a shell using Docker
-@shell:
-  docker build -t themis.nvim . && docker run -it themis.nvim
