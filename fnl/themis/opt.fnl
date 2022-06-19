@@ -5,6 +5,7 @@
         : gensym-checksum
         : expand-exprs
         : vlua} (require :themis.lib.compile-time))
+(local itable (require :themis.deps.itable))
 
 (lambda set! [name ?value]
   "Set a vim option using the vim.opt.<name> API.
@@ -35,12 +36,11 @@
         value (if (fn? value)
                 (vlua (gensym-checksum value {:prefix "__"}))
                 value)
-        exprs (doto exprs
-                    (table.insert (match (name:sub -1)
-                                    "+" `(: (. vim.opt ,(name:sub 1 -2)) :append ,value)
-                                    "-" `(: (. vim.opt ,(name:sub 1 -2)) :remove ,value)
-                                    "^" `(: (. vim.opt ,(name:sub 1 -2)) :prepend ,value)
-                                    _ `(tset vim.opt ,name ,value))))]
+        exprs (itable.insert exprs (match (name:sub -1)
+                                     "+" `(: (. vim.opt ,(name:sub 1 -2)) :append ,value)
+                                     "-" `(: (. vim.opt ,(name:sub 1 -2)) :remove ,value)
+                                     "^" `(: (. vim.opt ,(name:sub 1 -2)) :prepend ,value)
+                                     _ `(tset vim.opt ,name ,value)))]
     (expand-exprs exprs)))
 
 (lambda local-set! [name ?value]
@@ -72,12 +72,11 @@
         value (if (fn? value)
                 (vlua (gensym-checksum value {:prefix "__"}))
                 value)
-        exprs (doto exprs
-                    (table.insert (match (name:sub -1)
-                                    "+" `(: (. vim.opt_local ,(name:sub 1 -2)) :append ,value)
-                                    "-" `(: (. vim.opt_local ,(name:sub 1 -2)) :remove ,value)
-                                    "^" `(: (. vim.opt_local ,(name:sub 1 -2)) :prepend ,value)
-                                    _ `(tset vim.opt_local ,name ,value))))]
+        exprs (itable.insert exprs (match (name:sub -1)
+                                     "+" `(: (. vim.opt_local ,(name:sub 1 -2)) :append ,value)
+                                     "-" `(: (. vim.opt_local ,(name:sub 1 -2)) :remove ,value)
+                                     "^" `(: (. vim.opt_local ,(name:sub 1 -2)) :prepend ,value)
+                                     _ `(tset vim.opt_local ,name ,value)))]
     (expand-exprs exprs)))
 
 {: set!
