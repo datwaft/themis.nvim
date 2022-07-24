@@ -24,7 +24,7 @@ runner := 'deps/fennel-test/runner'
   git submodule update --remote
 
 # Execute test suites
-@test +files=`find tests/ -name '*.spec.fnl' | paste -sd ' '`: ensure
+@test +files=`find tests/ -name '*.spec.fnl' | paste -sd ' ' -`: ensure
   {{fennel-binary}} --lua {{lua-binary}} {{fennel-options}} {{runner}} {{files}}
 
 # Execute file
