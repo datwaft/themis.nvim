@@ -52,11 +52,12 @@
   "Initializes the plugin manager with the plugins previously declared and
   their respective options."
   (let [packs (icollect [_ v (ipairs _G.themis/pack)] `(use ,v))
-        rocks (icollect [_ v (ipairs _G.themis/rock)] `(use_rocks ,v))]
+        rocks (icollect [_ v (ipairs _G.themis/rock)] `(use_rocks ,v))
+        use-sym (sym :use)]
     (tset _G :themis/pack [])
     (tset _G :themis/rock [])
     `((. (require :packer) :startup)
-      (fn [use]
+      (fn [,use-sym]
         ,(unpack (icollect [_ v (ipairs packs) :into rocks] v))))))
 
 {: pack
