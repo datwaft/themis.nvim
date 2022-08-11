@@ -56,7 +56,7 @@
     (tset _G :themis/pack [])
     (tset _G :themis/rock [])
     `((. (require :packer) :startup)
-      (fn []
+      (fn [use]
         ,(unpack (icollect [_ v (ipairs packs) :into rocks] v))))))
 
 {: pack

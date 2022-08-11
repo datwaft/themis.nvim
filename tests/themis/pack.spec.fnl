@@ -40,13 +40,13 @@
 (deftest macro/unpack!
   (testing "works properly after not declaring any plugins"
     (assert-eq (expr->str (unpack!))
-               (expr->str ((. (require :packer) :startup) (fn [])))))
+               (expr->str ((. (require :packer) :startup) (fn [use])))))
   (testing "works properly after declaring some plugins"
     (pack! :plugin1)
     (pack! :plugin2 {:option :value})
     (assert-eq (expr->str (unpack!))
                (expr->str ((. (require :packer) :startup)
-                           (fn []
+                           (fn [use]
                              (use [:plugin1])
                              (use {1 :plugin2 :option :value}))))))
   (testing "works properly after declaring some plugins and rocks"
@@ -56,7 +56,7 @@
     (rock! :some_rock {:option :value})
     (assert-eq (expr->str (unpack!))
                (expr->str ((. (require :packer) :startup)
-                           (fn []
+                           (fn [use]
                              (use_rocks [:some_rock])
                              (use_rocks {1 :some_rock :option :value})
                              (use [:plugin1])
