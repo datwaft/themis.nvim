@@ -27,6 +27,10 @@ runner := 'deps/fennel-test/runner'
 @test +files=`find tests/ -name '*.spec.fnl' | paste -sd ' ' -`: ensure
   {{fennel-binary}} --lua {{lua-binary}} {{fennel-options}} {{runner}} {{files}}
 
-# Execute file
+# Compile file
 @compile file: ensure
   {{fennel-binary}} --lua {{lua-binary}} {{fennel-options}} -c {{file}}
+
+# Execute file
+@run file: ensure
+  {{fennel-binary}} --lua {{lua-binary}} {{fennel-options}} {{file}}
