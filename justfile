@@ -34,3 +34,7 @@ runner := 'deps/fennel-test/runner'
 # Execute file
 @run file: ensure
   {{fennel-script}} --lua {{lua-binary}} {{fennel-options}} {{file}}
+
+# Open REPL
+@repl: ensure
+  {{fennel-script}} --lua {{lua-binary}} {{fennel-options}}
