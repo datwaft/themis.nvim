@@ -1,11 +1,11 @@
-(local {: ->str : str? : nil? : tbl?} (require :themis.lib.types))
+(local {: ->str : str? : nil?} (require :themis.lib.types))
 (local {: fn? : quoted? : quoted->fn : quoted->str} (require :themis.lib.compile-time))
 
 (lambda shared-command! [api-function name command ?options]
   (assert-compile (sym? api-function) "expected symbol for api-function" api-function)
   (assert-compile (sym? name) "expected symbol for name" name)
   (assert-compile (or (str? command) (sym? command) (fn? command) (quoted? command)) "expected string, symbol, function or quoted expression for command" command)
-  (assert-compile (or (nil? ?options) (tbl? ?options)) "expected table for options" ?options)
+  (assert-compile (or (nil? ?options) (table? ?options)) "expected table for options" ?options)
   (let [name (->str name)
         options (or ?options {})
         options (if (nil? options.desc)
