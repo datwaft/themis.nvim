@@ -51,24 +51,16 @@ export LUA_CPATH := absolute_path(env-path / "lib/lua/5.1/?.so") + ";" + env_var
 
 # Install hererocks environment
 @install-env:
-  [ -x "{{hererocks-bin}}" ] || [ -x "$(command -v {{hererocks-bin}})" ] || \
-    (echo "hererocks-bin ('{{hererocks-bin}}') doesn't exist" && false)
-  [ ! -d "{{env-path}}" ] || \
-    (echo "env-path ('{{env-path}}') already exists" && false)
+  [ -x "$(command -v {{hererocks-bin}})" ] || (echo "hererocks-bin ('{{hererocks-bin}}') doesn't exist" && false)
+  [ ! -d "{{env-path}}" ] || (echo "env-path ('{{env-path}}') already exists" && false)
   {{hererocks-bin}} {{env-path}} -j2.1 -rlatest
   {{luarocks-bin}} install readline {{readline-opts}}
 
 # Verify that the binaries exist
 @verify-bins:
-  # Verify that fennel-bin exists
-  [ -x "{{fennel-bin}}" ] || [ -x "$(command -v {{fennel-bin}})" ] || \
-    (echo "fennel-bin ('{{fennel-bin}}') doesn't exist" && false)
-  # Verify that lua-bin exists
-  [ -x "{{lua-bin}}" ] || [ -x "$(command -v {{lua-bin}})" ] || \
-    (echo "lua-bin ('{{lua-bin}}') doesn't exist" && false)
-  # Verify that runner-bin exists
-  [ -x "{{runner-bin}}" ] || [ -x "$(command -v {{runner-bin}})" ] || \
-    (echo "runner-bin ('{{runner-bin}}') doesn't exist" && false)
+  [ -x "$(command -v {{fennel-bin}})" ] || (echo "fennel-bin ('{{fennel-bin}}') doesn't exist" && false)
+  [ -x "$(command -v {{lua-bin}})" ] || (echo "lua-bin ('{{lua-bin}}') doesn't exist" && false)
+  [ -x "$(command -v {{runner-bin}})" ] || (echo "runner-bin ('{{runner-bin}}') doesn't exist" && false)
 
 # Upgrade dependencies
 @upgrade:
