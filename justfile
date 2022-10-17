@@ -1,6 +1,6 @@
 # use with https://github.com/casey/just
 
-fennel-binary := 'deps/fennel'
+fennel-script := 'deps/fennel-1.2.1'
 lua-binary := 'luajit'
 fennel-options := trim(replace(replace("
   --no-compiler-sandbox
@@ -25,12 +25,12 @@ runner := 'deps/fennel-test/runner'
 
 # Execute test suites
 @test +files=`find tests/ -name '*.spec.fnl' | paste -sd ' ' -`: ensure
-  {{fennel-binary}} --lua {{lua-binary}} {{fennel-options}} {{runner}} {{files}}
+  {{fennel-script}} --lua {{lua-binary}} {{fennel-options}} {{runner}} {{files}}
 
 # Compile file
 @compile file: ensure
-  {{fennel-binary}} --lua {{lua-binary}} {{fennel-options}} -c {{file}}
+  {{fennel-script}} --lua {{lua-binary}} {{fennel-options}} -c {{file}}
 
 # Execute file
 @run file: ensure
-  {{fennel-binary}} --lua {{lua-binary}} {{fennel-options}} {{file}}
+  {{fennel-script}} --lua {{lua-binary}} {{fennel-options}} {{file}}
