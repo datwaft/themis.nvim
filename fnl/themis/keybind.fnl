@@ -1,4 +1,4 @@
-(local {: ->str : nil? : str? : tbl?} (require :themis.lib.types))
+(local {: ->str : nil? : str?} (require :themis.lib.types))
 (local {: fn? : quoted? : quoted->fn : quoted->str} (require :themis.lib.compile-time))
 
 (lambda map! [[modes] lhs rhs ?options]
@@ -27,7 +27,7 @@
   (assert-compile (sym? modes) "expected symbol for modes" modes)
   (assert-compile (str? lhs) "expected string for lhs" lhs)
   (assert-compile (or (str? rhs) (sym? rhs) (fn? rhs) (quoted? rhs)) "expected string, symbol, function or quoted expression for rhs" rhs)
-  (assert-compile (or (nil? ?options) (tbl? ?options)) "expected table for options" ?options)
+  (assert-compile (or (nil? ?options) (table? ?options)) "expected table for options" ?options)
   (let [modes (icollect [char (string.gmatch (->str modes) ".")] char)
         options (or ?options {})
         options (if (nil? options.desc)
@@ -65,7 +65,7 @@
   (assert-compile (sym? modes) "expected symbol for modes" modes)
   (assert-compile (str? lhs) "expected string for lhs" lhs)
   (assert-compile (or (str? rhs) (sym? rhs) (fn? rhs) (quoted? rhs)) "expected string, symbol, function or quoted expression for rhs" rhs)
-  (assert-compile (or (nil? ?options) (tbl? ?options)) "expected table for options" ?options)
+  (assert-compile (or (nil? ?options) (table? ?options)) "expected table for options" ?options)
   (let [options (or ?options {})
         options (doto options (tset :buffer 0))]
     (map! [modes] lhs rhs options)))

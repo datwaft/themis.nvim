@@ -1,4 +1,4 @@
-(local {: ->str : tbl?} (require :themis.lib.types))
+(local {: ->str} (require :themis.lib.types))
 
 (lambda highlight! [name attributes colors]
   "Sets a highlight group globally using the vim.api.nvim_set_hl API.
@@ -33,8 +33,8 @@
                                     :bold true})
   ```"
   (assert-compile (sym? name) "expected symbol for name" name)
-  (assert-compile (tbl? attributes) "expected table for attributes" attributes)
-  (assert-compile (tbl? colors) "expected colors for colors" colors)
+  (assert-compile (table? attributes) "expected table for attributes" attributes)
+  (assert-compile (table? colors) "expected colors for colors" colors)
   (let [name (->str name)
         definition (collect [_ attr (ipairs attributes)
                              :into colors]

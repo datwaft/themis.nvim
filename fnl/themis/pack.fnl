@@ -1,4 +1,4 @@
-(local {: str? : nil? : tbl? } (require :themis.lib.types))
+(local {: str? : nil?} (require :themis.lib.types))
 
 (tset _G :themis/pack [])
 (tset _G :themis/rock [])
@@ -11,7 +11,7 @@
   Additional to those options you can use 'require*' and 'setup*' to use the
   'config' options with `require(%s)` and `require(%s).setup() respectively.`"
   (assert-compile (str? identifier) "expected string for identifier" identifier)
-  (if (not (nil? ?options)) (assert-compile (tbl? ?options) "expected table for options" ?options))
+  (if (not (nil? ?options)) (assert-compile (table? ?options) "expected table for options" ?options))
   (let [options (or ?options {})
         options (collect [k v (pairs options)]
                   (match k
@@ -26,7 +26,7 @@
   See https://github.com/wbthomason/packer.nvim for information about the
   options."
   (assert-compile (str? identifier) "expected string for identifier" identifier)
-  (if (not (nil? ?options)) (assert-compile (tbl? ?options) "expected table for options" ?options))
+  (if (not (nil? ?options)) (assert-compile (table? ?options) "expected table for options" ?options))
   (let [options (or ?options {})]
     (doto options (tset 1 identifier))))
 
@@ -36,7 +36,7 @@
   See https://github.com/wbthomason/packer.nvim for information about the
   options."
   (assert-compile (str? identifier) "expected string for identifier" identifier)
-  (if (not (nil? ?options)) (assert-compile (tbl? ?options) "expected table for options" ?options))
+  (if (not (nil? ?options)) (assert-compile (table? ?options) "expected table for options" ?options))
   (table.insert _G.themis/pack (pack identifier ?options)))
 
 (lambda rock! [identifier ?options]
@@ -45,7 +45,7 @@
   See https://github.com/wbthomason/packer.nvim for information about the
   options."
   (assert-compile (str? identifier) "expected string for identifier" identifier)
-  (if (not (nil? ?options)) (assert-compile (tbl? ?options) "expected table for options" ?options))
+  (if (not (nil? ?options)) (assert-compile (table? ?options) "expected table for options" ?options))
   (table.insert _G.themis/rock (rock identifier ?options)))
 
 (lambda unpack! []
