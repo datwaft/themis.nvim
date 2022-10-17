@@ -21,4 +21,4 @@ jobs:
       - name: Setup Just
         uses: extractions/setup-just@v1
       - name: Execute tests
-        run: just test
+        run: just lua-bin="luajit" test
