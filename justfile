@@ -38,8 +38,8 @@ readline-opts := if `command -v brew > /dev/null && brew list readline 2> /dev/n
 runner-bin := 'deps/fennel-test/runner'
 
 # Add hererocks environment to $LUA_PATH and $LUA_CPATH
-export LUA_PATH := absolute_path(env-path / "share/lua/5.1/?.lua") + ";" + env_var('LUA_PATH')
-export LUA_CPATH := absolute_path(env-path / "lib/lua/5.1/?.so") + ";" + env_var('LUA_CPATH')
+export LUA_PATH := absolute_path(env-path / "share/lua/5.1/?.lua") + ";" + env_var_or_default('LUA_PATH', '')
+export LUA_CPATH := absolute_path(env-path / "lib/lua/5.1/?.so") + ";" + env_var_or_default('LUA_CPATH', '')
 
 # Display list of commands
 @help:
