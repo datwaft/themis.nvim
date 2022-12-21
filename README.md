@@ -17,7 +17,7 @@ a new repository and isolate them from my configuration.
 
 ### Where does the name come from?
 
-The name comes from the ancient greek titan of justice, divine order, law and custom.
+The name comes from the ancient Greek titan of justice, divine order, law and custom.
 
 I choose this name because this plugin brings order to my Neovim configuration.
 
