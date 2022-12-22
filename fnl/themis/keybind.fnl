@@ -52,7 +52,7 @@
 
   Example of use:
   ```fennel
-  (map! [nv] \"<leader>lr\" vim.lsp.references
+  (buf-map! [nv] \"<leader>lr\" vim.lsp.references
         {:silent true :desc \"This is a description\"})
   ```
   That compiles to:
