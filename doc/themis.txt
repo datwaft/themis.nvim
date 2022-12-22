@@ -1,0 +1,450 @@
+*themis.txt*                                          DSL for Neovim in Fennel
+*themis.nvim*
+
+Author: David Guevara <datwaftx@gmail.com>                     *themis-author*
+
+============================================================================
+USAGE                                                           *themis-usage*
+
+This plugin creates a DSL using Fennel macros. As these macros only exist on
+compilation-time you need to use `import-macros`.
+>fennel
+  (import-macros {: let!} :themis.var)
+
+As the previous code-block shows, you can import macros one by one into the
+current scope using destructuring.
+
+============================================================================
+OPTION MACROS                                                     *themis.opt*
+
+------------------------------------------------------------ *themis.opt.set!*
+
+set!~
+>fennel
+  (set! name ?value)
+
+See |vim.opt| for inner workings.
+
+Parameters:
+  • {name}   (symbol) Can have `+`, `^` or `-` appended which means that
+             {value} will be appended (`+`), prepended (`^`) or removed (`-`)
+             from the original {value}.
+  • {value}  (any|nil) If it is `nil` then the option is assumed to be boolean
+             and whether {name} begins with `no` is what defines if the option
+             is `true` or `false`.
+
+Examples:
+>fennel
+  (set! spell)           ; set to true
+  (set! nospell)         ; set to false
+  (set! spell true)      ; set to true
+  (set! mouse :a)        ; set to "a"
+  (set! mouse+ :a)       ; appends "a"
+  (set! path- "**")      ; removes "**"
+  (set! spelllang^ "en") ; prepends "en"
+
+That is equivalent to:
+>fennel
+  (set vim.opt.spell true)
+  (set vim.opt.spell false)
+  (set vim.opt.spell true)
+  (set vim.opt.mouse :a)
+  (vim.opt.mouse:append :a)
+  (vim.opt.path:remove "**")
+  (vim.opt.spelllang:prepend "en")
+
+When {value} is a quoted expression or a function a new global variable
+containing {value} is created from the checksum of the {value}. The option is
+set to a |v:lua| call.
+
+Example:
+>fennel
+  (set! spell '(+ 1 2))
+
+This is equivalent to:
+>fennel
+  (do
+    (tset _G "__b3e8c661" (fn [] (+ 1 2)))
+    (tset vim.opt :spell "v:lua.__b3e8c661()"))
+
+------------------------------------------------------ *themis.opt.set-local!*
+
+set-local!~
+>fennel
+  (set-local! name ?value)
+
+See |vim.opt_local| for inner workings.
+
+Parameters:
+  • {name}   (symbol) Can have `+`, `^` or `-` appended which means that
+             {value} will be appended (`+`), prepended (`^`) or removed (`-`)
+             from the original {value}.
+  • {value}  (any|nil) If it is `nil` then the option is assumed to be boolean
+             and whether {name} begins with `no` is what defines if the option
+             is `true` or `false`.
+
+Examples:
+>fennel
+  (set-local! spell)           ; set to true
+  (set-local! nospell)         ; set to false
+  (set-local! spell true)      ; set to true
+  (set-local! mouse :a)        ; set to "a"
+  (set-local! mouse+ :a)       ; appends "a"
+  (set-local! path- "**")      ; removes "**"
+  (set-local! spelllang^ "en") ; prepends "en"
+
+That is equivalent to:
+>fennel
+  (set vim.opt_local.spell true)
+  (set vim.opt_local.spell false)
+  (set vim.opt_local.spell true)
+  (set vim.opt_local.mouse :a)
+  (vim.opt_local.mouse:append :a)
+  (vim.opt_local.path:remove "**")
+  (vim.opt_local.spelllang:prepend "en")
+
+When {value} is a quoted expression or a function a new global variable
+containing {value} is created from the checksum of the {value}. The option is
+set to a |v:lua| call.
+
+Example:
+>fennel
+  (set-local! spell '(+ 1 2))
+
+This is equivalent to:
+>fennel
+  (do
+    (tset _G "__b3e8c661" (fn [] (+ 1 2)))
+    (tset vim.opt_local :spell "v:lua.__b3e8c661()"))
+
+============================================================================
+VARIABLE MACROS                                                   *themis.var*
+
+------------------------------------------------------------ *themis.var.let!*
+
+let!~
+>fennel
+  (let! [scope] name value)
+  (let! name value)
+
+See |vim.g|, |vim.b|, |vim.w| and |vim.t| for inner workings.
+
+Parameters:
+  • {scope}  (symbol|nil) Can be either `g`, `b`, `t` or `w`. If `nil` then
+             the global scope is assumed (see |vim.g|).
+  • {name}   (symbol|string)
+  • {value}  (any)
+
+Example:
+>fennel
+  (let! hello :world)     ; sets the global variable hello to "world"
+  (let! [g] hello :world) ; sets the global variable hello to "world"
+  (let! [b] hello :world) ; sets the buffer variable hello to "world"
+  (let! [t] hello :world) ; sets the tab variable hello to "world"
+  (let! [w] hello :world) ; sets the window variable hello to "world"
+
+That is equivalent to:
+>fennel
+  (tset vim.g :hello :world)
+  (tset vim.g :hello :world)
+  (tset vim.b :hello :world)
+  (tset vim.t :hello :world)
+  (tset vim.w :hello :world)
+
+============================================================================
+PACKAGE MACROS                                                   *themis.pack*
+
+----------------------------------------------------------- *themis.pack.pack*
+
+pack~
+>fennel
+  (pack identifier ?options)
+
+See |packer.use()| for more information about how to use it.
+
+This is a workaround around the lack of mixed tables in Fennel.
+
+Parameters:
+  • {identifier}  (string) The name of the plugin.
+  • {options}     (table|nil) Has special keys `require*` and `setup*`.
+
+Examples:
+>fennel
+  (pack "datwaft/themis.nvim" {:as "themis"})
+  (pack "markonm/traces.vim" {:require* "conf.pack.traces"})
+  (pack "numToStr/Comment.nvim" {:setup* "Comment"})
+
+That is equivalent to:
+>fennel
+  {0 "datwaft/themis.nvim" :as "themis"}
+  {0 "markonm/traces.vim" :config "require(\"conf.pack.traces\")"}
+  {0 "numToStr/Comment.nvim" :config "require(\"Comment\").setup()"}
+
+----------------------------------------------------------- *themis.pack.rock*
+
+rock~
+>fennel
+  (rock identifier ?options)
+
+This macro is functionally equivalent to |themis.pack.pack| but doesn't have
+keys with special meanings.
+
+---------------------------------------------------------- *themis.pack.pack!*
+
+pack!~
+>fennel
+  (pack! identifier ?options)
+
+Appends the result of |themis.pack.pack| to the global variable `themis/pack`.
+The idea is to use that global variable to in the |themis.pack.unpack!| macro.
+
+---------------------------------------------------------- *themis.pack.rock!*
+
+rock!~
+>fennel
+  (rock! identifier ?options)
+
+Appends the result of |themis.pack.rock| to the global variable `themis/rock`.
+The idea is to use that global variable to in the |themis.pack.unpack!| macro.
+
+-------------------------------------------------------- *themis.pack.unpack!*
+
+unpack!~
+>fennel
+  (unpack!)
+
+Initializes |packer.nvim| with the plugins previously declared using
+|themis.pack.pack!| and the rocks previously declared using
+|themis.pack.rock!|.
+
+Example:
+>fennel
+  (pack! "rktjmp/hotpot.nvim")
+  (pack! "datwaft/themis.nvim")
+  (unpack!)
+
+That is equivalent to:
+>fennel
+  ((. (require :packer) :startup)
+   (fn [use]
+     (use {0 "rktjmp/hotpot.nvim"})
+     (use {0 "datwaft/themis.nvim"})))
+
+============================================================================
+KEYBIND MACROS                                                *themis.keybind*
+
+-------------------------------------------------------- *themis.keybind.map!*
+
+map!~
+>fennel
+  (map! [modes] lhs rhs ?options)
+
+See |vim.keymap.set()| for inner workings.
+
+Parameters:
+  • {modes}    (symbol) Each character is a mode.
+  • {lhs}      (string)
+  • {lhs}      (string|symbol|function|quoted expression)
+  • {options}  (table|nil) If it does not include the `desc` option then it
+               will be inferred from {rhs}.
+
+Example:
+>fennel
+  (map! [nv] "<leader>lr" vim.lsp.references
+        {:silent true :buffer 0 :desc "This is a description"})
+
+That is equivalent to:
+>fennel
+  (vim.keymap.set [:n :v] "<leader>lr" vim.lsp.references
+                  {:silent true
+                   :buffer 0
+                   :desc "This is a description"})
+
+---------------------------------------------------- *themis.keybind.buf-map!*
+
+buf-map!~
+>fennel
+  (buf-map! [modes] lhs rhs ?options)
+
+See |vim.keymap.set()| for inner workings.
+
+Appends the `buffer` option with `0` as the value to the {options} table.
+
+Parameters:
+  • {modes}    (symbol) Each character is a mode.
+  • {lhs}      (string)
+  • {lhs}      (string|symbol|function|quoted expression)
+  • {options}  (table|nil) If it does not include the `desc` option then it
+               will be inferred from {rhs}.
+
+Example:
+>fennel
+  (buf-map! [nv] "<leader>lr" vim.lsp.references
+        {:silent true :desc "This is a description"})
+
+That is equivalent to:
+>fennel
+  (vim.keymap.set [:n :v] "<leader>lr" vim.lsp.references
+                  {:silent true
+                   :buffer 0
+                   :desc "This is a description"})
+
+============================================================================
+COMMAND MACROS                                                    *themis.cmd*
+
+-------------------------------------------------------- *themis.cmd.command!*
+
+command!~
+>fennel
+  (command! name command ?options)
+
+See |nvim_create_user_command()| for inner workings.
+
+Parameters:
+  • {name}     (symbol)
+  • {command}  (string|symbol|function|quoted expression)
+  • {options}  (table|nil) If it does not include the `desc` option then it
+               will be inferred from {command}.
+
+Example:
+>fennel
+  (command! Salute '(print "Hello World")
+            {:bang true :desc "This is a description"})
+
+That is equivalent to:
+>fennel
+  (vim.api.nvim_create_user_command "Salute" (fn [] (print "Hello World"))
+                                    {:bang true
+                                     :desc "This is a description"})
+
+-------------------------------------------------- *themis.cmd.local-command!*
+
+local-command!~
+>fennel
+  (local-command! name command ?options)
+
+See |nvim_buf_create_user_command()| for inner workings.
+
+Parameters:
+  • {name}     (symbol)
+  • {command}  (string|symbol|function|quoted expression)
+  • {options}  (table|nil) If it does not include the `desc` option then it
+               will be inferred from {command}.
+
+Example:
+>fennel
+  (local-command! Salute '(print "Hello World")
+                  {:bang true :desc "This is a description"})
+
+That is equivalent to:
+>fennel
+  (vim.api.nvim_buf_create_user_command "Salute" (fn [] (print "Hello World"))
+                                        {:bang true
+                                         :desc "This is a description"})
+
+============================================================================
+HIGHLIGHT MACROS                                            *themis.highlight*
+
+------------------------------------------------ *themis.highlight.highlight!*
+
+highlight!~
+>fennel
+  (highlight! name attribues colors)
+
+See |nvim_set_hl()| for inner workings.
+
+Parameters:
+  • {name}        (symbol)
+  • {attributes}  (list) A list of boolean attributes.
+  • {colors}      (table) A table of non-boolean attributes.
+
+Example:
+>fennel
+  (highlight! Error [:bold] {:fg "#ff0000"})
+
+That is equivalent to:
+>fennel
+  (vim.api.nvim_set_hl 0 "Error" {:fg "#ff0000"
+                                  :bold true})
+
+============================================================================
+EVENT MACROS                                                    *themis.event*
+
+------------------------------------------------------ *themis.event.autocmd!*
+
+autocmd!~
+>fennel
+  (autocmd! event pattern command ?options)
+
+See |nvim_create_autocmd()| for inner workings.
+
+Parameters:
+  • {event}    (symbol|symbol[])
+  • {pattern}  (symbol|symbol[]) If it is `<buffer>` the `buffer` option will
+               be set to `0`. This has lower priority than setting the
+               `buffer` option manually.
+  • {command}  (string|symbol|function|quoted expression)
+  • {options}  (table|nil) If it does not include the `desc` option then it
+               will be inferred from {command}.
+
+Example:
+>fennel
+  (autocmd! VimEnter *.py '(print "Hello World")
+            {:once true :group "custom" :desc "This is a description"})
+
+That is equivalent to:
+>fennel
+  (vim.api.nvim_create_autocmd :VimEnter
+                               {:pattern "*.py"
+                                :callback (fn [] (print "Hello World"))
+                                :once true
+                                :group "custom"
+                                :desc "This is a description"})
+
+------------------------------------------------------ *themis.event.augroup!*
+
+augroup!~
+>fennel
+  (augroup! name ...)
+
+See |nvim_create_augroup()| for inner workings.
+
+Parameters:
+  • {name}  (symbol)
+  • {...}   (vararg) Must be either a list of |themis.event.autocmd!|
+            statements or a list of |themis.event.clear!| statements.
+
+Example:
+>fennel
+  (augroup! a-nice-group
+    (autocmd! Filetype *.py '(print "Hello World"))
+    (autocmd! Filetype *.sh '(print "Hello World")))
+
+That is equivalent to:
+>fennel
+  (do
+    (vim.api.nvim_create_augroup "a-nice-group" {:clear false})
+    (autocmd! Filetype *.py '(print "Hello World") {:group "a-nice-group"})
+    (autocmd! Filetype *.sh '(print "Hello World") {:group "a-nice-group"}))
+
+-------------------------------------------------------- *themis.event.clear!*
+
+clear!~
+>fennel
+  (clear! name ?options)
+
+See |nvim_clear_autocmds()| for inner workings.
+
+Parameters:
+  • {name}     (symbol)
+  • {options}  (table|nil)
+
+Example:
+>fennel
+  (clear! some-group)
+
+That is equivalent to:
+>fennel
+  (vim.api.nvim_clear_autocmds {:group "some-group"})
+
+vim:tw=78:ts=8:ft=help:norl:
