@@ -176,9 +176,9 @@ Examples:
 
 That is equivalent to:
 >fennel
-  {0 "datwaft/themis.nvim" :as "themis"}
-  {0 "markonm/traces.vim" :config "require(\"conf.pack.traces\")"}
-  {0 "numToStr/Comment.nvim" :config "require(\"Comment\").setup()"}
+  {1 "datwaft/themis.nvim" :as "themis"}
+  {1 "markonm/traces.vim" :config "require(\"conf.pack.traces\")"}
+  {1 "numToStr/Comment.nvim" :config "require(\"Comment\").setup()"}
 
 ----------------------------------------------------------- *themis.pack.rock*
 
@@ -227,8 +227,8 @@ That is equivalent to:
 >fennel
   ((. (require :packer) :startup)
    (fn [use]
-     (use {0 "rktjmp/hotpot.nvim"})
-     (use {0 "datwaft/themis.nvim"})))
+     (use {1 "rktjmp/hotpot.nvim"})
+     (use {1 "datwaft/themis.nvim"})))
 
 ============================================================================
 KEYBIND MACROS                                                *themis.keybind*
