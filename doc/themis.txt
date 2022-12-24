@@ -447,4 +447,39 @@ That is equivalent to:
 >fennel
   (vim.api.nvim_clear_autocmds {:group "some-group"})
 
+============================================================================
+MODULE MACROS                                                  *themis.module*
+
+----------------------------------------- *themis.module.verify-dependencies!*
+
+verify-dependencies!~
+>fennel
+  (verify-dependencies dependencies)
+
+This macro uses a lua escape hatch to make an early return if any dependency
+is no available.
+
+Parameters:
+  • {dependencies}  (sequence) A list of dependencies to check.
+
+Example:
+>fennel
+  (verify-dependencies! [:fennel :hotpot])
+
+That is equivalent to:
+>fennel
+  (let [dependencies [:fennel :hotpot]
+        info (debug.getinfo 1 :S)
+        module-name info.source
+        module-name (module-name:match "@(.*)")
+        not-available (icollect [_ dependency (ipairs dependencies)]
+                        (when (not (pcall require dependency))
+                          dependency))]
+    (when (> (length not-available) 0)
+      (each [_ dependency (ipairs not-available)]
+        (vim.notify (string.format "Could not load '%s' as '%s' is not available."
+                                   module-name dependency)
+                    vim.log.levels.WARN))
+      (lua "return nil")))
+
 vim:tw=78:ts=8:ft=help:norl:
