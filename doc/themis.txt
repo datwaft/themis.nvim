@@ -152,9 +152,9 @@ That is equivalent to:
   (tset vim.w :hello :world)
 
 ============================================================================
-PACKAGE MACROS                                                   *themis.pack*
+PACKER PACKAGE MANAGER MACROS                             *themis.pack.packer*
 
------------------------------------------------------------ *themis.pack.pack*
+---------------------------------------------------- *themis.pack.packer.pack*
 
 pack~
 >fennel
@@ -180,42 +180,36 @@ That is equivalent to:
   {1 "markonm/traces.vim" :config "require(\"conf.pack.traces\")"}
   {1 "numToStr/Comment.nvim" :config "require(\"Comment\").setup()"}
 
------------------------------------------------------------ *themis.pack.rock*
-
-rock~
->fennel
-  (rock identifier ?options)
-
-This macro is functionally equivalent to |themis.pack.pack| but doesn't have
-keys with special meanings.
-
----------------------------------------------------------- *themis.pack.pack!*
+--------------------------------------------------- *themis.pack.packer.pack!*
 
 pack!~
 >fennel
   (pack! identifier ?options)
 
-Appends the result of |themis.pack.pack| to the global variable `themis/pack`.
-The idea is to use that global variable to in the |themis.pack.unpack!| macro.
+Appends the result of |themis.pack.packer.pack| to the global variable
+`themis/pack`.
+The idea is to use that global variable to in the |themis.pack.packer.unpack!|
+macro.
 
----------------------------------------------------------- *themis.pack.rock!*
+--------------------------------------------------- *themis.pack.packer.rock!*
 
 rock!~
 >fennel
-  (rock! identifier ?options)
+  (rock! identifier)
 
-Appends the result of |themis.pack.rock| to the global variable `themis/rock`.
-The idea is to use that global variable to in the |themis.pack.unpack!| macro.
+Appends the {identifier} to the global variable `themis/rock`.
+The idea is to use that global variable to in the |themis.pack.packer.unpack!|
+macro.
 
--------------------------------------------------------- *themis.pack.unpack!*
+------------------------------------------------- *themis.pack.packer.unpack!*
 
 unpack!~
 >fennel
   (unpack!)
 
 Initializes |packer.nvim| with the plugins previously declared using
-|themis.pack.pack!| and the rocks previously declared using
-|themis.pack.rock!|.
+|themis.pack.packer.pack!| and the rocks previously declared using
+|themis.pack.packer.rock!|.
 
 Example:
 >fennel

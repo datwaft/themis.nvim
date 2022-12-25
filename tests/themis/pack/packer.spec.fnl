@@ -2,10 +2,9 @@
 (import-macros {: expr->str} :themis.lib.compile-time)
 
 (import-macros {: pack
-                : rock
                 : pack!
                 : rock!
-                : unpack!} :themis.pack)
+                : unpack!} :themis.pack.packer)
 
 (deftest macro/pack
   (testing "works properly with only the identifier"
@@ -28,15 +27,6 @@
                 :option :value
                 :config "require(\"plugin\").setup()"})))
 
-(deftest macro/rock
-  (testing "works properly with only the identifier"
-    (assert-eq (rock :plugin1)
-               [:plugin1]))
-  (testing "works properly with identifier and options"
-    (assert-eq (rock :plugin1 {:option :value})
-               {1 :plugin1
-                :option :value})))
-
 (deftest macro/unpack!
   (testing "works properly after not declaring any plugins"
     (assert-eq (expr->str (unpack!))
@@ -53,11 +43,10 @@
     (pack! :plugin1)
     (rock! :some_rock)
     (pack! :plugin2 {:option :value})
-    (rock! :some_rock {:option :value})
     (assert-eq (expr->str (unpack!))
                (expr->str ((. (require :packer) :startup)
                            (fn [use]
-                             (use_rocks [:some_rock])
-                             (use_rocks {1 :some_rock :option :value})
+                             (use_rocks :some_rock)
                              (use [:plugin1])
                              (use {1 :plugin2 :option :value})))))))
+
