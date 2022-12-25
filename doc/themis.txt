@@ -225,6 +225,33 @@ That is equivalent to:
      (use {1 "datwaft/themis.nvim"})))
 
 ============================================================================
+LAZY PACKAGE MANAGER MACROS                                 *themis.pack.lazy*
+
+------------------------------------------------------ *themis.pack.lazy.pack*
+
+pack~
+>fennel
+  (pack identifier ?options)
+
+See |lazy.nvim-plugin-spec| for more information about how to use it.
+
+This is a workaround around the lack of mixed tables in Fennel.
+
+Parameters:
+  • {identifier}  (string) The name of the plugin.
+  • {options}     (table|nil) Has special key `require*`.
+
+Examples:
+>fennel
+  (pack "datwaft/themis.nvim" {:name "themis"})
+  (pack "markonm/traces.vim" {:require* "conf.pack.traces"})
+
+That is equivalent to:
+>fennel
+  {1 "datwaft/themis.nvim" :name "themis"}
+  {1 "markonm/traces.vim" :config #(require("conf.pack.traces"))}
+
+============================================================================
 KEYBIND MACROS                                                *themis.keybind*
 
 -------------------------------------------------------- *themis.keybind.map!*
