@@ -50,7 +50,10 @@
                (expr->str (: (. vim.opt "list") :remove "something"))))
   (testing "works properly with prepend"
     (assert-eq (expr->str (set! list^ "something"))
-               (expr->str (: (. vim.opt "list") :prepend "something")))))
+               (expr->str (: (. vim.opt "list") :prepend "something"))))
+  (testing "works properly with get"
+    (assert-eq (expr->str (set! list?))
+               (expr->str (: (. vim.opt "list") :get)))))
 
 (deftest macro/local-set!
   (testing "works properly with only a name"
@@ -98,4 +101,8 @@
                (expr->str (: (. vim.opt_local "list") :remove "something"))))
   (testing "works properly with prepend"
     (assert-eq (expr->str (local-set! list^ "something"))
-               (expr->str (: (. vim.opt_local "list") :prepend "something")))))
+               (expr->str (: (. vim.opt_local "list") :prepend "something"))))
+  (testing "works properly with get"
+    (assert-eq (expr->str (local-set! list?))
+               (expr->str (: (. vim.opt_local "list") :get)))))
+
