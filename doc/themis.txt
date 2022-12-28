@@ -26,9 +26,10 @@ set!~
 See |vim.opt| for inner workings.
 
 Parameters:
-  • {name}   (symbol) Can have `+`, `^` or `-` appended which means that
+  • {name}   (symbol) Can have `+`, `^`, `-` or `?` appended which means that
              {value} will be appended (`+`), prepended (`^`) or removed (`-`)
-             from the original {value}.
+             from the original {value}. If it ends with `?` then the current
+             {value} is returned.
   • {value}  (any|nil) If it is `nil` then the option is assumed to be boolean
              and whether {name} begins with `no` is what defines if the option
              is `true` or `false`.
@@ -42,6 +43,7 @@ Examples:
   (set! mouse+ :a)       ; appends "a"
   (set! path- "**")      ; removes "**"
   (set! spelllang^ "en") ; prepends "en"
+  (set! spell?)          ; returns the current value
 
 That is equivalent to:
 >fennel
@@ -52,6 +54,7 @@ That is equivalent to:
   (vim.opt.mouse:append :a)
   (vim.opt.path:remove "**")
   (vim.opt.spelllang:prepend "en")
+  (vim.opt.spell:get)
 
 When {value} is a quoted expression or a function a new global variable
 containing {value} is created from the checksum of the {value}. The option is
@@ -76,9 +79,10 @@ set-local!~
 See |vim.opt_local| for inner workings.
 
 Parameters:
-  • {name}   (symbol) Can have `+`, `^` or `-` appended which means that
+  • {name}   (symbol) Can have `+`, `^`, `-` or `?` appended which means that
              {value} will be appended (`+`), prepended (`^`) or removed (`-`)
-             from the original {value}.
+             from the original {value}. If it ends with `?` then the current
+             {value} is returned.
   • {value}  (any|nil) If it is `nil` then the option is assumed to be boolean
              and whether {name} begins with `no` is what defines if the option
              is `true` or `false`.
@@ -92,6 +96,7 @@ Examples:
   (set-local! mouse+ :a)       ; appends "a"
   (set-local! path- "**")      ; removes "**"
   (set-local! spelllang^ "en") ; prepends "en"
+  (set-local! spell?)          ; returns the current value
 
 That is equivalent to:
 >fennel
@@ -102,6 +107,7 @@ That is equivalent to:
   (vim.opt_local.mouse:append :a)
   (vim.opt_local.path:remove "**")
   (vim.opt_local.spelllang:prepend "en")
+  (vim.opt_local.spell:get)
 
 When {value} is a quoted expression or a function a new global variable
 containing {value} is created from the checksum of the {value}. The option is

@@ -12,7 +12,9 @@
   name -> must be a symbol.
           - If it ends with '+' it appends to the current value.
           - If it ends with '-' it removes from the current value.
-          - If it ends with with '^' it prepends to the current value.
+          - If it ends with '^' it prepends to the current value.
+          - If it ends with '?' it ignores the value and returns the current
+            value.
   value -> anything.
            - If it is not specified, whether the name begins with 'no' is used
              as a boolean value.
@@ -40,6 +42,7 @@
                                     "+" `(: (. vim.opt ,(name:sub 1 -2)) :append ,value)
                                     "-" `(: (. vim.opt ,(name:sub 1 -2)) :remove ,value)
                                     "^" `(: (. vim.opt ,(name:sub 1 -2)) :prepend ,value)
+                                    "?" `(: (. vim.opt ,(name:sub 1 -2)) :get)
                                     _ `(tset vim.opt ,name ,value))))]
     (expand-exprs exprs)))
 
@@ -50,6 +53,8 @@
           - If it ends with '+' it appends to the current value.
           - If it ends with '-' it removes from the current value.
           - If it ends with with '^' it prepends to the current value.
+          - If it ends with '?' it ignores the value and returns the current
+            value.
   value -> anything.
            - If it is not specified, whether the name begins with 'no' is used
              as a boolean value.
@@ -77,6 +82,7 @@
                                     "+" `(: (. vim.opt_local ,(name:sub 1 -2)) :append ,value)
                                     "-" `(: (. vim.opt_local ,(name:sub 1 -2)) :remove ,value)
                                     "^" `(: (. vim.opt_local ,(name:sub 1 -2)) :prepend ,value)
+                                    "?" `(: (. vim.opt_local ,(name:sub 1 -2)) :get)
                                     _ `(tset vim.opt_local ,name ,value))))]
     (expand-exprs exprs)))
 
