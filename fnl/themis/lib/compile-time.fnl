@@ -4,7 +4,9 @@
 (local {: djb2} (require :themis.lib.crypt))
 
 (lambda expr->str [expr]
-  `(string.gsub (macrodebug ,expr nil) "_%d+_auto" "#"))
+  `(-> (macrodebug ,expr nil)
+       (string.gsub "{}" "[]")
+       (string.gsub "_%d+_auto" "#")))
 
 (fn fn? [x]
   "Checks if `x` is a function definition.
