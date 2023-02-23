@@ -7,7 +7,7 @@ hererocks-bin := 'hererocks'
 env-path := 'deps/env'
 
 # Path to fennel binary (by default uses dependency)
-fennel-bin := 'deps/fennel-1.2.1'
+fennel-bin := 'deps/fennel-1.3.0'
 
 # Path to lua binary (by default uses hererocks environment)
 lua-bin := env-path / 'bin/lua'
