@@ -42,7 +42,7 @@ $(LUA): $(ENV)
 $(READLINE): $(LUAROCKS)
 	$(LUAROCKS) install readline $(READLINE_FLAGS)
 
-%.lua: %.fnl
+%.lua: %.fnl $(FENNEL) $(LUA)
 	$(FENNEL) --lua $(LUA) $(FFLAGS) -c $< > $@
 
 # =============
@@ -53,10 +53,10 @@ $(READLINE): $(LUAROCKS)
 
 TEST_DIR := ./tests/
 TEST_FILES := $(wildcard $(TEST_DIR)/**/*.spec.fnl)
-test: $(LUA) $(TEST_RUNNER)
+test: $(FENNEL) $(LUA) $(TEST_RUNNER)
 	$(FENNEL) --lua $(LUA) $(FFLAGS) $(TEST_RUNNER) $(TEST_FILES)
 
-repl: $(LUA) $(READLINE)
+repl: $(FENNEL) $(LUA) $(READLINE)
 	$(FENNEL) --lua $(LUA) $(FFLAGS)
 
 ## ===========
