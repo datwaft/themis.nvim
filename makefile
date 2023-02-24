@@ -43,7 +43,7 @@ $(READLINE): $(LUAROCKS)
 	$(LUAROCKS) install readline $(READLINE_FLAGS)
 
 %.lua: %.fnl $(FENNEL) $(LUA)
-	$(FENNEL) --lua $(LUA) $(FFLAGS) -c $< > $@
+	$(LUA) $(FENNEL) $(FFLAGS) -c $< > $@
 
 # =============
 # PHONY TARGETS
@@ -54,10 +54,10 @@ $(READLINE): $(LUAROCKS)
 TEST_DIR := ./tests/
 TEST_FILES := $(wildcard $(TEST_DIR)/**/*.spec.fnl)
 test: $(FENNEL) $(LUA) $(TEST_RUNNER)
-	$(FENNEL) --lua $(LUA) $(FFLAGS) $(TEST_RUNNER) $(TEST_FILES)
+	$(LUA) $(FENNEL) $(FFLAGS) $(TEST_RUNNER) $(TEST_FILES)
 
 repl: $(FENNEL) $(LUA) $(READLINE)
-	$(FENNEL) --lua $(LUA) $(FFLAGS)
+	$(LUA) $(FENNEL) $(FFLAGS)
 
 ## ===========
 ## HELP TARGET
