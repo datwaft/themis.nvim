@@ -51,7 +51,7 @@ $(READLINE): $(LUAROCKS)
 
 .PHONY: test repl help
 
-TEST_DIR := ./tests/
+TEST_DIR := ./tests
 TEST_FILES := $(wildcard $(TEST_DIR)/**/*.spec.fnl)
 test: $(FENNEL) $(LUA) $(TEST_RUNNER)
 	$(LUA) $(FENNEL) $(FFLAGS) $(TEST_RUNNER) $(TEST_FILES)
