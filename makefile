@@ -3,13 +3,16 @@ SHELL = /bin/sh
 .SUFFIXES:
 .SUFFIXES: .lua .fnl
 
+# External dependencies
+HEREROCKS := $(shell command -v hererocks)
+
 # Where to find hererocks environment
-ENV := ./deps/env
+DEPS := deps
+ENV := $(DEPS)/env
 
 # Where to find binaries
-FENNEL := ./deps/fennel-1.3.0
-TEST_RUNNER := ./deps/fennel-test/runner
-HEREROCKS := hererocks
+FENNEL := $(DEPS)/fennel-1.3.0
+TEST_RUNNER := $(DEPS)/fennel-test/runner
 LUA := $(ENV)/bin/lua
 LUAROCKS := $(ENV)/bin/luarocks
 READLINE := $(ENV)/share/lua/5.1/readline.lua
@@ -18,31 +21,31 @@ READLINE := $(ENV)/share/lua/5.1/readline.lua
 FFLAGS := --no-compiler-sandbox \
 					--add-fennel-path 'fnl/?.fnl' \
 					--add-macro-path 'fnl/?.fnl' \
-					--add-fennel-path 'deps/?.fnl' \
-					--add-macro-path 'deps/?/init-macros.fnl'
+					--add-fennel-path '$(DEPS)/?.fnl' \
+					--add-macro-path '$(DEPS)/?/init-macros.fnl'
 
-LUA_PATH := $(ENV)/share/lua/5.1/?.lua;$(LUA_PATH)
-LUA_CPATH := $(ENV)/lib/lua/5.1/?.so;$(LUA_CPATH)
-
-BREW_READLINE := $(shell brew --prefix readline 2> /dev/null)
-
-READLINE_FLAGS := HISTORY_DIR=$(BREW_READLINE) \
-									READLINE_DIR=$(BREW_READLINE)
+export LUA_PATH := $(ENV)/share/lua/5.1/?.lua;$(LUA_PATH)
+export LUA_CPATH := $(ENV)/lib/lua/5.1/?.so;$(LUA_CPATH)
 
 all: help
 
 $(TEST_RUNNER):
 	git submodule update --init
 
-$(ENV):
+$(ENV): $(HEREROCKS)
+ifndef HEREROCKS
+	$(error "hererocks is not available.")
+endif
 	$(HEREROCKS) $@ -j2.1 -rlatest
 $(LUAROCKS): $(ENV)
 $(LUA): $(ENV)
 
+$(READLINE): BREW_READLINE := $(shell brew --prefix readline 2> /dev/null)
+$(READLINE): ARGUMENTS := HISTORY_DIR=$(BREW_READLINE) READLINE_DIR=$(BREW_READLINE)
 $(READLINE): $(LUAROCKS)
-	$(LUAROCKS) install readline $(READLINE_FLAGS)
+	$(LUAROCKS) install readline $(ARGUMENTS)
 
-%.lua: %.fnl $(FENNEL) $(LUA)
+%.lua: %.fnl $(LUA) $(FENNEL)
 	$(LUA) $(FENNEL) $(FFLAGS) -c $< > $@
 
 # =============
@@ -51,12 +54,12 @@ $(READLINE): $(LUAROCKS)
 
 .PHONY: test repl help
 
-TEST_DIR := ./tests
-TEST_FILES := $(wildcard $(TEST_DIR)/**/*.spec.fnl)
-test: $(FENNEL) $(LUA) $(TEST_RUNNER)
+test: TEST_DIR := tests
+test: TEST_FILES := $(wildcard $(TEST_DIR)/**/*.spec.fnl)
+test: $(LUA) $(FENNEL) $(TEST_RUNNER)
 	$(LUA) $(FENNEL) $(FFLAGS) $(TEST_RUNNER) $(TEST_FILES)
 
-repl: $(FENNEL) $(LUA) $(READLINE)
+repl: $(LUA) $(FENNEL) $(READLINE)
 	$(LUA) $(FENNEL) $(FFLAGS)
 
 ## ===========
