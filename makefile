@@ -32,7 +32,7 @@ all: help
 $(TEST_RUNNER):
 	git submodule update --init
 
-$(ENV): $(HEREROCKS)
+$(ENV): | $(HEREROCKS)
 ifndef HEREROCKS
 	$(error "hererocks is not available.")
 endif
