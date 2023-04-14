@@ -509,4 +509,38 @@ That is equivalent to:
                     vim.log.levels.WARN))
       (lua "return nil")))
 
+===========================================================================
+FUNCTION MACROS                                                   *themis.fn*
+
+------------------------------------------------------ *themis.fn.extend-fn!*
+
+extend-fn~
+>fennel
+  (extend-fn fn-name [& arguments] & body)
+
+This macro extends, in-place, a function. It intercepts the return values of
+the function and passes them as the {arguments} to the {body} statements.
+
+Parameters:
+  • {fn-name}   (symbol) The name of the function to extend.
+  • {arguments} (sequence) The return values of the function to extend.
+  • {body}      (vararg) Statements to execute using the return values of the
+                function.
+
+Example:
+>fennel
+  (extend-fn greet [message]
+    (print message))
+
+This is equivalent to:
+>fennel
+  (let [old# greet]
+    (set greet (fn [...]
+                 (local result# [(old# ...)])
+                 (local [message] result#)
+                 (print message)
+                 (values (unpack result#))))
+    greet)
+
+
 vim:tw=78:ts=8:ft=help:norl:
